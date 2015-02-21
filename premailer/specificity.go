@@ -18,6 +18,12 @@ type specificity struct {
 	ruleIndex int
 }
 
+func (s *specificity) importantOrders() []int {
+	return []int{s.important, s.idCount,
+			s.classCount, s.attrCount,
+			s.typeCount, s.ruleSetIndex,
+			s.ruleIndex}
+}
 
 var _type_selector_regex = regexp.MustCompile("(^|\\s)\\w")
 
@@ -41,34 +47,14 @@ func (bs bySpecificity) Len() int {
 func (bs bySpecificity) Swap(i, j int) {
 	bs[i], bs[j] = bs[j], bs[i]
 }
+
 func (bs bySpecificity) Less(i, j int) bool {
-	if bs[i].specificity.important < bs[j].specificity.important {
-		return true
+	iorders := bs[i].specificity.importantOrders()
+	jorders := bs[j].specificity.importantOrders()
+	for n, v := range iorders {
+		if v < jorders[n] {
+			return true
+		}
 	}
-	
-	if bs[i].specificity.idCount < bs[j].specificity.idCount {
-		return true
-	}
-	
-	if bs[i].specificity.classCount < bs[j].specificity.classCount {
-		return true
-	}
-	
-	if bs[i].specificity.attrCount < bs[j].specificity.attrCount {
-		return true
-	}
-	
-	if bs[i].specificity.typeCount < bs[j].specificity.typeCount {
-		return true
-	}
-	
-	if bs[i].specificity.ruleSetIndex < bs[j].specificity.ruleSetIndex {
-		return true
-	}
-	
-	if bs[i].specificity.ruleIndex < bs[j].specificity.ruleIndex {
-		return true
-	}
-	
 	return false
 }

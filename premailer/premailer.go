@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/PuerkitoBio/goquery"
 	"github.com/vanng822/gocssom/cssom"
+	"golang.org/x/net/html"
 	"sort"
 	"strconv"
 	"strings"
@@ -12,12 +13,6 @@ import (
 
 type Premailer interface {
 	Transform() (string, error)
-}
-
-type styleRule struct {
-	specificity *specificity
-	selector    string
-	styles      map[string]*cssom.CSSStyleDeclaration
 }
 
 type premailer struct {
