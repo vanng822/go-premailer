@@ -108,6 +108,9 @@ func (pr *premailer) sortRules() {
 func (pr *premailer) collectRules() {
 	var wg sync.WaitGroup
 	pr.doc.Find("style").Each(func(i int, s *goquery.Selection) {
+		if _, exist := s.Attr("media"); exist {
+			return
+		}
 		wg.Add(1)
 		pr.allRules = append(pr.allRules, nil)
 		go func() {
@@ -149,13 +152,39 @@ func (pr *premailer) applyInline() {
 	}
 }
 
-func (pr *premailer) Transform() (string, error) {
-	if !pr.processed {
-		pr.collectRules()
-		pr.sortRules()
-		pr.collectElements()
-		pr.applyInline()
-		pr.processed = true
+
+func (pr *premailer) addLeftover() {
+	if len(pr.leftover) > 0 {
+		pr.doc.Find("style").EachWithBreak(func(i int, s *goquery.Selection) bool {
+			css := &html.Node{}
+			cssData := make([]string,0)
+			for _, rule := range pr.leftover {
+				var media string
+				if rule.Type == cssom.MEDIA_RULE {
+					media = "@media "
+				} else {
+					media = ""
+				}
+				properties := make([]string, 0)
+				for prop, val := range rule.Style.Styles {
+					properties = append(properties, fmt.Sprintf("\t%s:%s !important", prop, val.Value))
+				}
+				cssData = append(cssData, fmt.Sprintf("%s%s{\n%s\n}\n", media, rule.Style.SelectorText, strings.Join(properties, ";\n")))
+			}
+			css.Data = strings.Join(cssData, "")
+			css.Type = html.TextNode
+			s.AppendNodes(css)
+			return false
+		})
 	}
+}
+
+func (pr *premailer) Transform() (string, error) {
+	pr.collectRules()
+	pr.sortRules()
+	pr.collectElements()
+	pr.applyInline()
+	pr.addLeftover()
+	//fmt.Println(pr.leftover)
 	return pr.doc.Html()
 }
