@@ -49,13 +49,24 @@ func (pr *premailer) sortRules() {
 }
 
 func (pr *premailer) collectRules() {
+	var wg sync.WaitGroup
+	allRules := make([][]*cssom.CSSRule, 0)
 	pr.doc.Find("style").Each(func(i int, s *goquery.Selection) {
-		//fmt.Println(s.Text())
-		//fmt.Println(s.Nodes)
-		ss := cssom.Parse(s.Text())
-		r := ss.GetCSSRuleList()
-		pr.allRules = append(pr.allRules, r...)
+		wg.Add(1)
+		allRules = append(allRules, nil)
+		go func() {
+			defer wg.Done()
+			ss := cssom.Parse(s.Text())
+			r := ss.GetCSSRuleList()
+			allRules[i] = r
+		}()
 	})
+	wg.Wait()
+	for _, rules := range allRules {
+		if rules != nil {
+			pr.allRules = append(pr.allRules, rules...)
+		}
+	}
 }
 
 func (pr *premailer) collectElements() {
