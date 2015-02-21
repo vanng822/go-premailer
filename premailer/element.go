@@ -5,14 +5,14 @@ import (
 	"github.com/vanng822/gocssom/cssom"
 )
 
-type ElementRules struct {
+type elementRules struct {
 	element *goquery.Selection
 	rules   []*cssom.CSSRule
 }
 
-func (er *ElementRules) Inline() {
+func (er *elementRules) inline() {
 	inline, _ := er.element.Attr("style")
-	style := MergeRules(inline, er.rules)
+	style := mergeRules(inline, er.rules)
 	if style != "" {
 		er.element.SetAttr("style", style)
 	}

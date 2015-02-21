@@ -6,7 +6,7 @@ import (
 	"strings"
 )
 
-func MergeRules(inline string, rules []*cssom.CSSRule) string {
+func mergeRules(inline string, rules []*cssom.CSSRule) string {
 	style := make(map[string]string)
 	for _, rule := range rules {
 		for prop, s := range rule.Style.Styles {

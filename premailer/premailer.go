@@ -11,7 +11,7 @@ import (
 type Premailer struct {
 	doc       *goquery.Document
 	elIdAttr  string
-	elements  map[int]*ElementRules
+	elements  map[int]*elementRules
 	rules     []*cssom.CSSRule
 	allRules  []*cssom.CSSRule
 	elementId int
@@ -22,7 +22,7 @@ func NewPremailer(doc *goquery.Document) *Premailer {
 	premailer.doc = doc
 	premailer.rules = make([]*cssom.CSSRule, 0)
 	premailer.allRules = make([]*cssom.CSSRule, 0)
-	premailer.elements = make(map[int]*ElementRules)
+	premailer.elements = make(map[int]*elementRules)
 	premailer.elIdAttr = "premailer-el-id"
 	return &premailer
 }
@@ -76,7 +76,7 @@ func (premailer *Premailer) collectElements() {
 					s.SetAttr(premailer.elIdAttr, strconv.Itoa(premailer.elementId))
 					rules := make([]*cssom.CSSRule, 0)
 					rules = append(rules, rule)
-					premailer.elements[premailer.elementId] = &ElementRules{element: s, rules: rules}
+					premailer.elements[premailer.elementId] = &elementRules{element: s, rules: rules}
 					premailer.elementId += 1
 				}
 			})
@@ -86,7 +86,7 @@ func (premailer *Premailer) collectElements() {
 
 func (premailer *Premailer) applyInline() {
 	for _, element := range premailer.elements {
-		element.Inline()
+		element.inline()
 		element.element.RemoveAttr(premailer.elIdAttr)
 	}
 }
