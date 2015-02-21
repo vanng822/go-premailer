@@ -37,13 +37,6 @@ func NewPremailer(doc *goquery.Document) Premailer {
 	return &pr
 }
 
-func copyRule(selector string, rule *cssom.CSSRule) *cssom.CSSRule {
-	// copy rule for each selector
-	copiedStyle := cssom.CSSStyleRule{SelectorText: selector, Styles: rule.Style.Styles}
-	copiedRule := &cssom.CSSRule{Type: rule.Type, Style: copiedStyle}
-	return copiedRule
-}
-
 func (pr *premailer) sortRules() {
 	ruleIndexCounter := 1
 	for ruleSetIndex, rules := range pr.allRules {
