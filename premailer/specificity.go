@@ -10,22 +10,26 @@ import (
 
 type specificity struct {
 	important   int
-	id_count    int
-	class_count int
-	type_count  int
-	attr_count  int
+	idCount    int
+	classCount int
+	typeCount  int
+	attrCount  int
+	ruleSetIndex int
+	ruleIndex int
 }
 
 
 var _type_selector_regex = regexp.MustCompile("(^|\\s)\\w")
 
-func makeSpecificity(important int, selector string) *specificity {
+func makeSpecificity(important, ruleSetIndex, ruleIndex int, selector string) *specificity {
 	spec := specificity{}
 	// determine values for priority
 	spec.important = important
-	spec.id_count = strings.Count(selector, "#")
-	spec.class_count = strings.Count(selector, ".")
-	spec.type_count = len(_type_selector_regex.FindAllString(selector, -1))
+	spec.idCount = strings.Count(selector, "#")
+	spec.classCount = strings.Count(selector, ".")
+	spec.typeCount = len(_type_selector_regex.FindAllString(selector, -1))
+	spec.ruleSetIndex = ruleSetIndex
+	spec.ruleIndex = ruleIndex
 	return &spec
 }
 
@@ -42,14 +46,27 @@ func (bs bySpecificity) Less(i, j int) bool {
 		return true
 	}
 	
-	if bs[i].specificity.id_count < bs[j].specificity.id_count {
-		return true
-	}
-	if bs[i].specificity.class_count < bs[j].specificity.class_count {
+	if bs[i].specificity.idCount < bs[j].specificity.idCount {
 		return true
 	}
 	
-	if bs[i].specificity.type_count < bs[j].specificity.type_count {
+	if bs[i].specificity.classCount < bs[j].specificity.classCount {
+		return true
+	}
+	
+	if bs[i].specificity.attrCount < bs[j].specificity.attrCount {
+		return true
+	}
+	
+	if bs[i].specificity.typeCount < bs[j].specificity.typeCount {
+		return true
+	}
+	
+	if bs[i].specificity.ruleSetIndex < bs[j].specificity.ruleSetIndex {
+		return true
+	}
+	
+	if bs[i].specificity.ruleIndex < bs[j].specificity.ruleIndex {
 		return true
 	}
 	
