@@ -4,8 +4,6 @@ import (
 	"fmt"
 	"github.com/PuerkitoBio/goquery"
 	"github.com/vanng822/gocssom/cssom"
-	"log"
-	"os"
 	"strconv"
 	"strings"
 )

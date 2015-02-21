@@ -3,6 +3,7 @@ package premailer
 import (
 	"fmt"
 	"github.com/vanng822/gocssom/cssom"
+	"strings"
 )
 
 func MergeRules(inline string, rules []*cssom.CSSRule) string {
