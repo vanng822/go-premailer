@@ -147,12 +147,11 @@ func (pr *premailer) applyInline() {
 	}
 }
 
-
 func (pr *premailer) addLeftover() {
 	if len(pr.leftover) > 0 {
 		pr.doc.Find("style").EachWithBreak(func(i int, s *goquery.Selection) bool {
 			css := &html.Node{}
-			cssData := make([]string,0)
+			cssData := make([]string, 0)
 			for _, rule := range pr.leftover {
 				var media string
 				if rule.Type == cssom.MEDIA_RULE {
@@ -175,11 +174,13 @@ func (pr *premailer) addLeftover() {
 }
 
 func (pr *premailer) Transform() (string, error) {
-	pr.collectRules()
-	pr.sortRules()
-	pr.collectElements()
-	pr.applyInline()
-	pr.addLeftover()
-	//fmt.Println(pr.leftover)
+	if !pr.processed {
+		pr.collectRules()
+		pr.sortRules()
+		pr.collectElements()
+		pr.applyInline()
+		pr.addLeftover()
+		//fmt.Println(pr.leftover)
+	}
 	return pr.doc.Html()
 }
