@@ -2,12 +2,11 @@ package premailer
 
 import (
 	"github.com/PuerkitoBio/goquery"
-	"github.com/vanng822/gocssom/cssom"
 )
 
 type elementRules struct {
 	element *goquery.Selection
-	rules   []*cssom.CSSRule
+	rules   []*styleRule
 }
 
 func (er *elementRules) inline() {

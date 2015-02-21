@@ -2,14 +2,13 @@ package premailer
 
 import (
 	"fmt"
-	"github.com/vanng822/gocssom/cssom"
 	"strings"
 )
 
-func mergeRules(inline string, rules []*cssom.CSSRule) string {
+func mergeRules(inline string, rules []*styleRule) string {
 	style := make(map[string]string)
 	for _, rule := range rules {
-		for prop, s := range rule.Style.Styles {
+		for prop, s := range rule.styles {
 			style[prop] = s.Value
 		}
 	}

@@ -6,17 +6,26 @@ import (
 	"github.com/vanng822/gocssom/cssom"
 	"strconv"
 	"strings"
+	"sync"
+	"sort"
 )
 
 type Premailer interface {
 	Transform() (string, error)
 }
 
+type styleRule struct {
+	specificity *specificity
+	selector    string
+	styles      map[string]*cssom.CSSStyleDeclaration
+}
+
 type premailer struct {
 	doc       *goquery.Document
 	elIdAttr  string
 	elements  map[int]*elementRules
-	rules     []*cssom.CSSRule
+	rules     []*styleRule
+	leftover  []*cssom.CSSRule
 	allRules  []*cssom.CSSRule
 	elementId int
 }
@@ -24,28 +33,66 @@ type premailer struct {
 func NewPremailer(doc *goquery.Document) Premailer {
 	pr := premailer{}
 	pr.doc = doc
-	pr.rules = make([]*cssom.CSSRule, 0)
+	pr.rules = make([]*styleRule, 0)
 	pr.allRules = make([]*cssom.CSSRule, 0)
+	pr.leftover = make([]*cssom.CSSRule, 0)
 	pr.elements = make(map[int]*elementRules)
 	pr.elIdAttr = "pr-el-id"
 	return &pr
 }
 
+func copyRule(selector string, rule *cssom.CSSRule) *cssom.CSSRule {
+	// copy rule for each selector
+	copiedStyle := cssom.CSSStyleRule{SelectorText: selector, Styles: rule.Style.Styles}
+	copiedRule := &cssom.CSSRule{Type: rule.Type, Style: copiedStyle}
+	return copiedRule
+}
+
 func (pr *premailer) sortRules() {
-	normalRules := make([]*cssom.CSSRule, 0)
-	importantRules := make([]*cssom.CSSRule, 0)
 
 	for _, rule := range pr.allRules {
-		for _, s := range rule.Style.Styles {
+		if rule.Type == cssom.MEDIA_RULE {
+			pr.leftover = append(pr.leftover, rule)
+			continue
+		}
+		normalStyles := make(map[string]*cssom.CSSStyleDeclaration)
+		importantStyles := make(map[string]*cssom.CSSStyleDeclaration)
+
+		for prop, s := range rule.Style.Styles {
 			if s.Important == 1 {
-				importantRules = append(importantRules, rule)
+				importantStyles[prop] = s
 			} else {
-				normalRules = append(normalRules, rule)
+				normalStyles[prop] = s
+			}
+		}
+
+		selectors := strings.Split(rule.Style.SelectorText, ",")
+		for _, selector := range selectors {
+
+			if strings.Contains(selector, ":") {
+				// cause longer css
+				pr.leftover = append(pr.leftover, copyRule(selector, rule))
+				continue
+			}
+			if strings.Contains(selector, "*") {
+				// keep this?
+				pr.leftover = append(pr.leftover, copyRule(selector, rule))
+				continue
+			}
+			// TODO: Calculate specificity https://developer.mozilla.org/en-US/docs/Web/CSS/Specificity
+			// instead if this and sort on it
+			if len(normalStyles) > 0 {
+				pr.rules = append(pr.rules, &styleRule{makeSpecificity(0, selector), selector, normalStyles})
+			}
+			if len(importantStyles) > 0 {
+				pr.rules = append(pr.rules, &styleRule{makeSpecificity(1, selector), selector, importantStyles})
 			}
 		}
 	}
-	pr.rules = append(pr.rules, normalRules...)
-	pr.rules = append(pr.rules, importantRules...)
+	// TODO sort by specificity
+	//pr.rules = append(pr.rules, normalStyles...)
+	//pr.rules = append(pr.rules, importantStyles...)
+	sort.Sort(bySpecificity(pr.rules))
 }
 
 func (pr *premailer) collectRules() {
@@ -71,31 +118,22 @@ func (pr *premailer) collectRules() {
 
 func (pr *premailer) collectElements() {
 	for _, rule := range pr.rules {
-		fmt.Println(rule.Type, rule.Style.SelectorText)
-		if rule.Type == cssom.MEDIA_RULE {
-			continue
-		}
+		fmt.Println(rule.selector)
 
-		selectors := strings.Split(rule.Style.SelectorText, ",")
-		for _, selector := range selectors {
-			if strings.Contains(selector, ":") {
-				continue
+		pr.doc.Find(rule.selector).Each(func(i int, s *goquery.Selection) {
+			if val, exist := s.Attr(pr.elIdAttr); exist {
+				fmt.Println("HIT", val)
+				id, _ := strconv.Atoi(val)
+				pr.elements[id].rules = append(pr.elements[id].rules, rule)
+			} else {
+				s.SetAttr(pr.elIdAttr, strconv.Itoa(pr.elementId))
+				rules := make([]*styleRule, 0)
+				rules = append(rules, rule)
+				pr.elements[pr.elementId] = &elementRules{element: s, rules: rules}
+				pr.elementId += 1
 			}
-			fmt.Println(selector)
-			pr.doc.Find(selector).Each(func(i int, s *goquery.Selection) {
-				if val, exist := s.Attr(pr.elIdAttr); exist {
-					fmt.Println("HIT", val)
-					id, _ := strconv.Atoi(val)
-					pr.elements[id].rules = append(pr.elements[id].rules, rule)
-				} else {
-					s.SetAttr(pr.elIdAttr, strconv.Itoa(pr.elementId))
-					rules := make([]*cssom.CSSRule, 0)
-					rules = append(rules, rule)
-					pr.elements[pr.elementId] = &elementRules{element: s, rules: rules}
-					pr.elementId += 1
-				}
-			})
-		}
+		})
+
 	}
 }
 
