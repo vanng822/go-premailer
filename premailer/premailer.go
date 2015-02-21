@@ -28,6 +28,7 @@ type premailer struct {
 	leftover  []*cssom.CSSRule
 	allRules  [][]*cssom.CSSRule
 	elementId int
+	processed bool
 }
 
 func NewPremailer(doc *goquery.Document) Premailer {
@@ -149,9 +150,12 @@ func (pr *premailer) applyInline() {
 }
 
 func (pr *premailer) Transform() (string, error) {
-	pr.collectRules()
-	pr.sortRules()
-	pr.collectElements()
-	pr.applyInline()
+	if !pr.processed {
+		pr.collectRules()
+		pr.sortRules()
+		pr.collectElements()
+		pr.applyInline()
+		pr.processed = true
+	}
 	return pr.doc.Html()
 }
