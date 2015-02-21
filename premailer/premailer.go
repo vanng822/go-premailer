@@ -8,7 +8,11 @@ import (
 	"strings"
 )
 
-type Premailer struct {
+type Premailer interface {
+	Transform() (string, error)
+}
+
+type premailer struct {
 	doc       *goquery.Document
 	elIdAttr  string
 	elements  map[int]*elementRules
@@ -17,21 +21,21 @@ type Premailer struct {
 	elementId int
 }
 
-func NewPremailer(doc *goquery.Document) *Premailer {
-	premailer := Premailer{}
-	premailer.doc = doc
-	premailer.rules = make([]*cssom.CSSRule, 0)
-	premailer.allRules = make([]*cssom.CSSRule, 0)
-	premailer.elements = make(map[int]*elementRules)
-	premailer.elIdAttr = "premailer-el-id"
-	return &premailer
+func NewPremailer(doc *goquery.Document) Premailer {
+	pr := premailer{}
+	pr.doc = doc
+	pr.rules = make([]*cssom.CSSRule, 0)
+	pr.allRules = make([]*cssom.CSSRule, 0)
+	pr.elements = make(map[int]*elementRules)
+	pr.elIdAttr = "pr-el-id"
+	return &pr
 }
 
-func (premailer *Premailer) sortRules() {
+func (pr *premailer) sortRules() {
 	normalRules := make([]*cssom.CSSRule, 0)
 	importantRules := make([]*cssom.CSSRule, 0)
 
-	for _, rule := range premailer.allRules {
+	for _, rule := range pr.allRules {
 		for _, s := range rule.Style.Styles {
 			if s.Important == 1 {
 				importantRules = append(importantRules, rule)
@@ -40,22 +44,22 @@ func (premailer *Premailer) sortRules() {
 			}
 		}
 	}
-	premailer.rules = append(premailer.rules, normalRules...)
-	premailer.rules = append(premailer.rules, importantRules...)
+	pr.rules = append(pr.rules, normalRules...)
+	pr.rules = append(pr.rules, importantRules...)
 }
 
-func (premailer *Premailer) collectRules() {
-	premailer.doc.Find("style").Each(func(i int, s *goquery.Selection) {
+func (pr *premailer) collectRules() {
+	pr.doc.Find("style").Each(func(i int, s *goquery.Selection) {
 		//fmt.Println(s.Text())
 		//fmt.Println(s.Nodes)
 		ss := cssom.Parse(s.Text())
 		r := ss.GetCSSRuleList()
-		premailer.allRules = append(premailer.allRules, r...)
+		pr.allRules = append(pr.allRules, r...)
 	})
 }
 
-func (premailer *Premailer) collectElements() {
-	for _, rule := range premailer.rules {
+func (pr *premailer) collectElements() {
+	for _, rule := range pr.rules {
 		fmt.Println(rule.Type, rule.Style.SelectorText)
 		if rule.Type == cssom.MEDIA_RULE {
 			continue
@@ -67,34 +71,34 @@ func (premailer *Premailer) collectElements() {
 				continue
 			}
 			fmt.Println(selector)
-			premailer.doc.Find(selector).Each(func(i int, s *goquery.Selection) {
-				if val, exist := s.Attr(premailer.elIdAttr); exist {
+			pr.doc.Find(selector).Each(func(i int, s *goquery.Selection) {
+				if val, exist := s.Attr(pr.elIdAttr); exist {
 					fmt.Println("HIT", val)
 					id, _ := strconv.Atoi(val)
-					premailer.elements[id].rules = append(premailer.elements[id].rules, rule)
+					pr.elements[id].rules = append(pr.elements[id].rules, rule)
 				} else {
-					s.SetAttr(premailer.elIdAttr, strconv.Itoa(premailer.elementId))
+					s.SetAttr(pr.elIdAttr, strconv.Itoa(pr.elementId))
 					rules := make([]*cssom.CSSRule, 0)
 					rules = append(rules, rule)
-					premailer.elements[premailer.elementId] = &elementRules{element: s, rules: rules}
-					premailer.elementId += 1
+					pr.elements[pr.elementId] = &elementRules{element: s, rules: rules}
+					pr.elementId += 1
 				}
 			})
 		}
 	}
 }
 
-func (premailer *Premailer) applyInline() {
-	for _, element := range premailer.elements {
+func (pr *premailer) applyInline() {
+	for _, element := range pr.elements {
 		element.inline()
-		element.element.RemoveAttr(premailer.elIdAttr)
+		element.element.RemoveAttr(pr.elIdAttr)
 	}
 }
 
-func (premailer *Premailer) Transform() (string, error) {
-	premailer.collectRules()
-	premailer.sortRules()
-	premailer.collectElements()
-	premailer.applyInline()
-	return premailer.doc.Html()
+func (pr *premailer) Transform() (string, error) {
+	pr.collectRules()
+	pr.sortRules()
+	pr.collectElements()
+	pr.applyInline()
+	return pr.doc.Html()
 }
