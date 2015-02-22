@@ -9,6 +9,7 @@ import (
 	"strconv"
 	"strings"
 	"sync"
+	"os"
 )
 
 type Premailer interface {
@@ -50,10 +51,13 @@ func NewPremailerFromString(doc string) Premailer {
 func NewPremailerFromFile(filename string) Premailer {
 	fd, err := os.Open(filename)
 	if err != nil {
-		return panic(err)
+		panic(err)
 	}
 	defer fd.Close()
-	d := goquery.NewDocumentFromReader(fd)
+	d, err := goquery.NewDocumentFromReader(fd)
+	if err != nil {
+		panic(err)
+	}
 	return NewPremailer(d)
 }
 
