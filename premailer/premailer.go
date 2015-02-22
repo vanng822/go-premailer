@@ -3,7 +3,7 @@ package premailer
 import (
 	"fmt"
 	"github.com/PuerkitoBio/goquery"
-	"github.com/vanng822/gocssom/cssom"
+	"github.com/vanng822/css"
 	"golang.org/x/net/html"
 	"sort"
 	"strconv"
@@ -21,8 +21,8 @@ type premailer struct {
 	elIdAttr  string
 	elements  map[int]*elementRules
 	rules     []*styleRule
-	leftover  []*cssom.CSSRule
-	allRules  [][]*cssom.CSSRule
+	leftover  []*css.CSSRule
+	allRules  [][]*css.CSSRule
 	elementId int
 	processed bool
 }
@@ -31,8 +31,8 @@ func NewPremailer(doc *goquery.Document) Premailer {
 	pr := premailer{}
 	pr.doc = doc
 	pr.rules = make([]*styleRule, 0)
-	pr.allRules = make([][]*cssom.CSSRule, 0)
-	pr.leftover = make([]*cssom.CSSRule, 0)
+	pr.allRules = make([][]*css.CSSRule, 0)
+	pr.leftover = make([]*css.CSSRule, 0)
 	pr.elements = make(map[int]*elementRules)
 	pr.elIdAttr = "pr-el-id"
 	return &pr
@@ -69,12 +69,12 @@ func (pr *premailer) sortRules() {
 		}
 		
 		for _, rule := range rules {
-			if rule.Type == cssom.MEDIA_RULE {
+			if rule.Type == css.MEDIA_RULE {
 				pr.leftover = append(pr.leftover, rule)
 				continue
 			}
-			normalStyles := make(map[string]*cssom.CSSStyleDeclaration)
-			importantStyles := make(map[string]*cssom.CSSStyleDeclaration)
+			normalStyles := make(map[string]*css.CSSStyleDeclaration)
+			importantStyles := make(map[string]*css.CSSStyleDeclaration)
 
 			for prop, s := range rule.Style.Styles {
 				fmt.Println(s.Value)
@@ -127,7 +127,7 @@ func (pr *premailer) collectRules() {
 		pr.allRules = append(pr.allRules, nil)
 		go func() {
 			defer wg.Done()
-			ss := cssom.Parse(s.Text())
+			ss := css.Parse(s.Text())
 			r := ss.GetCSSRuleList()
 			pr.allRules[i] = r
 			s.Empty()
@@ -168,11 +168,11 @@ func (pr *premailer) applyInline() {
 func (pr *premailer) addLeftover() {
 	if len(pr.leftover) > 0 {
 		pr.doc.Find("style").EachWithBreak(func(i int, s *goquery.Selection) bool {
-			css := &html.Node{}
+			cssNode := &html.Node{}
 			cssData := make([]string, 0)
 			for _, rule := range pr.leftover {
 				var media string
-				if rule.Type == cssom.MEDIA_RULE {
+				if rule.Type == css.MEDIA_RULE {
 					media = "@media "
 				} else {
 					media = ""
@@ -183,9 +183,9 @@ func (pr *premailer) addLeftover() {
 				}
 				cssData = append(cssData, fmt.Sprintf("%s%s{\n%s\n}\n", media, rule.Style.SelectorText, strings.Join(properties, ";\n")))
 			}
-			css.Data = strings.Join(cssData, "")
-			css.Type = html.TextNode
-			s.AppendNodes(css)
+			cssNode.Data = strings.Join(cssData, "")
+			cssNode.Type = html.TextNode
+			s.AppendNodes(cssNode)
 			return false
 		})
 	}

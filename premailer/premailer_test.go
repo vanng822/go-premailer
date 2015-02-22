@@ -14,7 +14,7 @@ func TestBasicHTML(t *testing.T) {
         	color:red;
         }
         strong {
-        	text-decoration:none;
+        	text-decoration:none
         }
         </style>
         </head>

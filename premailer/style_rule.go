@@ -1,11 +1,11 @@
 package premailer
 
 import (
-	"github.com/vanng822/gocssom/cssom"
+	"github.com/vanng822/css"
 )
 
 type styleRule struct {
 	specificity *specificity
 	selector    string
-	styles      map[string]*cssom.CSSStyleDeclaration
+	styles      map[string]*css.CSSStyleDeclaration
 }
