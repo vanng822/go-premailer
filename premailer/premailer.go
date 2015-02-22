@@ -123,6 +123,9 @@ func (pr *premailer) collectRules() {
 		if _, exist := s.Attr("media"); exist {
 			return
 		}
+		if val, exist := s.Attr("data-premailer"); exist && val == "ignore" {
+			return
+		}
 		wg.Add(1)
 		pr.allRules = append(pr.allRules, nil)
 		go func() {
