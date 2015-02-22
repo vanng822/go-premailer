@@ -119,11 +119,8 @@ func (pr *premailer) sortRules() {
 
 func (pr *premailer) collectRules() {
 	var wg sync.WaitGroup
-	pr.doc.Find("style").Each(func(i int, s *goquery.Selection) {
+	pr.doc.Find("style:not([data-premailer='ignore'])").Each(func(i int, s *goquery.Selection) {
 		if _, exist := s.Attr("media"); exist {
-			return
-		}
-		if val, exist := s.Attr("data-premailer"); exist && val == "ignore" {
 			return
 		}
 		wg.Add(1)
