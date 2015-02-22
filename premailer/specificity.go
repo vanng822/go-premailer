@@ -33,6 +33,7 @@ func makeSpecificity(important, ruleSetIndex, ruleIndex int, selector string) *s
 	spec.important = important
 	spec.idCount = strings.Count(selector, "#")
 	spec.classCount = strings.Count(selector, ".")
+	spec.attrCount = strings.Count(selector, "[")
 	spec.typeCount = len(_type_selector_regex.FindAllString(selector, -1))
 	spec.ruleSetIndex = ruleSetIndex
 	spec.ruleIndex = ruleIndex
