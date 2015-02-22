@@ -46,6 +46,17 @@ func NewPremailerFromString(doc string) Premailer {
 	return NewPremailer(d)	
 }
 
+
+func NewPremailerFromFile(filename string) Premailer {
+	fd, err := os.Open(filename)
+	if err != nil {
+		return panic(err)
+	}
+	defer fd.Close()
+	d := goquery.NewDocumentFromReader(fd)
+	return NewPremailer(d)
+}
+
 func (pr *premailer) sortRules() {
 	ruleIndexCounter := 1
 	for ruleSetIndex, rules := range pr.allRules {

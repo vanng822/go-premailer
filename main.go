@@ -9,15 +9,6 @@ import (
 	"os"
 )
 
-func DocFromFile(filename string) (*goquery.Document, error) {
-	fd, err := os.Open(filename)
-	if err != nil {
-		return nil, err
-	}
-	defer fd.Close()
-	return goquery.NewDocumentFromReader(fd)
-}
-
 func main() {
 	var (
 		inputFile  string
@@ -30,12 +21,8 @@ func main() {
 		flag.Usage()
 		return
 	}
-	doc, err := DocFromFile(inputFile)
-	if err != nil {
-		log.Fatal(err)
-	}
 
-	prem := premailer.NewPremailer(doc)
+	prem := premailer.NewPremailerFromFile(inputFile)
 	html, err := prem.Transform()
 	if err != nil {
 		log.Fatal(err)
