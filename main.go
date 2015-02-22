@@ -3,7 +3,6 @@ package main
 import (
 	"flag"
 	"fmt"
-	"github.com/PuerkitoBio/goquery"
 	"github.com/vanng822/go-premailer/premailer"
 	"log"
 	"os"
