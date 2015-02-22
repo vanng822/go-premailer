@@ -37,13 +37,22 @@ func NewPremailer(doc *goquery.Document) Premailer {
 	return &pr
 }
 
+func NewPremailerFromString(doc string) Premailer {
+	read := strings.NewReader(doc)
+	d, err := goquery.NewDocumentFromReader(read)
+	if err != nil {
+		panic(err)
+	}
+	return NewPremailer(d)	
+}
+
 func (pr *premailer) sortRules() {
 	ruleIndexCounter := 1
 	for ruleSetIndex, rules := range pr.allRules {
 		if rules == nil {
 			continue
 		}
-
+		
 		for _, rule := range rules {
 			if rule.Type == cssom.MEDIA_RULE {
 				pr.leftover = append(pr.leftover, rule)
@@ -106,6 +115,7 @@ func (pr *premailer) collectRules() {
 			ss := cssom.Parse(s.Text())
 			r := ss.GetCSSRuleList()
 			pr.allRules[i] = r
+			s.Empty()
 		}()
 	})
 	wg.Wait()
