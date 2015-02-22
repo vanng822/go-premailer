@@ -9,7 +9,9 @@ env:
   - PATH="$HOME/gopath/bin:$HOME/bin:$PATH"
 
 install:
- - go get github.com/vanng822/gocssom/cssom 
+ - go get github.com/vanng822/gocssom/cssom
+ - go get github.com/PuerkitoBio/goquery
+ - go get golang.org/x/net/html 
  - go get github.com/stretchr/testify/assert
 
 script:
