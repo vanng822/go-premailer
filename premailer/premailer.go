@@ -9,12 +9,7 @@ import (
 	"strconv"
 	"strings"
 	"sync"
-	"os"
 )
-
-type Premailer interface {
-	Transform() (string, error)
-}
 
 type premailer struct {
 	doc       *goquery.Document
@@ -36,29 +31,6 @@ func NewPremailer(doc *goquery.Document) Premailer {
 	pr.elements = make(map[int]*elementRules)
 	pr.elIdAttr = "pr-el-id"
 	return &pr
-}
-
-func NewPremailerFromString(doc string) Premailer {
-	read := strings.NewReader(doc)
-	d, err := goquery.NewDocumentFromReader(read)
-	if err != nil {
-		panic(err)
-	}
-	return NewPremailer(d)	
-}
-
-
-func NewPremailerFromFile(filename string) Premailer {
-	fd, err := os.Open(filename)
-	if err != nil {
-		panic(err)
-	}
-	defer fd.Close()
-	d, err := goquery.NewDocumentFromReader(fd)
-	if err != nil {
-		panic(err)
-	}
-	return NewPremailer(d)
 }
 
 func (pr *premailer) sortRules() {
