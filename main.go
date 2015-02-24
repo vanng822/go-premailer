@@ -6,6 +6,7 @@ import (
 	"github.com/vanng822/go-premailer/premailer"
 	"log"
 	"os"
+	"time"
 )
 
 func main() {
@@ -20,9 +21,10 @@ func main() {
 		flag.Usage()
 		return
 	}
-
+	start := time.Now()
 	prem := premailer.NewPremailerFromFile(inputFile)
 	html, err := prem.Transform()
+	log.Printf("took: %v", time.Now().Sub(start))
 	if err != nil {
 		log.Fatal(err)
 	}

@@ -39,9 +39,8 @@ func (pr *premailer) sortRules() {
 		if rules == nil {
 			continue
 		}
-		
 		for _, rule := range rules {
-			if rule.Type == css.MEDIA_RULE {
+			if rule.Type != css.STYLE_RULE {
 				pr.leftover = append(pr.leftover, rule)
 				continue
 			}
@@ -49,7 +48,6 @@ func (pr *premailer) sortRules() {
 			importantStyles := make(map[string]*css.CSSStyleDeclaration)
 
 			for prop, s := range rule.Style.Styles {
-				fmt.Println(s.Value)
 				if s.Important == 1 {
 					importantStyles[prop] = s
 				} else {
@@ -59,7 +57,7 @@ func (pr *premailer) sortRules() {
 
 			selectors := strings.Split(rule.Style.SelectorText, ",")
 			for _, selector := range selectors {
-
+				// TODO handling filter selector
 				if strings.Contains(selector, ":") {
 					// cause longer css
 					pr.leftover = append(pr.leftover, copyRule(selector, rule))
@@ -70,8 +68,6 @@ func (pr *premailer) sortRules() {
 					pr.leftover = append(pr.leftover, copyRule(selector, rule))
 					continue
 				}
-				// TODO: Calculate specificity https://developer.mozilla.org/en-US/docs/Web/CSS/Specificity
-				// instead if this and sort on it
 				if len(normalStyles) > 0 {
 					pr.rules = append(pr.rules, &styleRule{makeSpecificity(0, ruleSetIndex, ruleIndexCounter, selector), selector, normalStyles})
 					ruleIndexCounter += 1
@@ -83,9 +79,6 @@ func (pr *premailer) sortRules() {
 			}
 		}
 	}
-	// TODO sort by specificity
-	//pr.rules = append(pr.rules, normalStyles...)
-	//pr.rules = append(pr.rules, importantStyles...)
 	sort.Sort(bySpecificity(pr.rules))
 }
 
@@ -102,6 +95,7 @@ func (pr *premailer) collectRules() {
 			ss := css.Parse(s.Text())
 			r := ss.GetCSSRuleList()
 			pr.allRules[i] = r
+			// how to remove this style element
 			s.Empty()
 		}()
 	})
@@ -111,11 +105,8 @@ func (pr *premailer) collectRules() {
 
 func (pr *premailer) collectElements() {
 	for _, rule := range pr.rules {
-		fmt.Println(rule.selector, rule.specificity)
-
 		pr.doc.Find(rule.selector).Each(func(i int, s *goquery.Selection) {
 			if val, exist := s.Attr(pr.elIdAttr); exist {
-				fmt.Println("HIT", val)
 				id, _ := strconv.Atoi(val)
 				pr.elements[id].rules = append(pr.elements[id].rules, rule)
 			} else {
@@ -137,23 +128,32 @@ func (pr *premailer) applyInline() {
 	}
 }
 
+func makeRuleImportant(rule *css.CSSRule) string {
+	// this for using Text() which has nice sorted props
+	for _, s := range rule.Style.Styles {
+		s.Important = 1
+	}
+	return rule.Style.Text()
+}
+
 func (pr *premailer) addLeftover() {
 	if len(pr.leftover) > 0 {
 		pr.doc.Find("style").EachWithBreak(func(i int, s *goquery.Selection) bool {
 			cssNode := &html.Node{}
-			cssData := make([]string, 0)
+			cssData := make([]string, 0, len(pr.leftover))
 			for _, rule := range pr.leftover {
-				var media string
 				if rule.Type == css.MEDIA_RULE {
-					media = "@media "
+					mcssData := make([]string, 0, len(rule.Rules))
+					for _, mrule := range rule.Rules {
+						mcssData = append(mcssData, makeRuleImportant(mrule))
+					}
+					cssData = append(cssData, fmt.Sprintf("%s %s{\n%s\n}\n",
+						rule.Type.Text(),
+						rule.Style.SelectorText,
+						strings.Join(mcssData, "\n")))
 				} else {
-					media = ""
+					cssData = append(cssData, makeRuleImportant(rule))
 				}
-				properties := make([]string, 0)
-				for prop, val := range rule.Style.Styles {
-					properties = append(properties, fmt.Sprintf("\t%s:%s !important", prop, val.Value))
-				}
-				cssData = append(cssData, fmt.Sprintf("%s%s{\n%s\n}\n", media, rule.Style.SelectorText, strings.Join(properties, ";\n")))
 			}
 			cssNode.Data = strings.Join(cssData, "")
 			cssNode.Type = html.TextNode
@@ -170,7 +170,6 @@ func (pr *premailer) Transform() (string, error) {
 		pr.collectElements()
 		pr.applyInline()
 		pr.addLeftover()
-		//fmt.Println(pr.leftover)
 	}
 	return pr.doc.Html()
 }
