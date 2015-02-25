@@ -59,3 +59,32 @@ func TestDataPremailerIgnore(t *testing.T) {
 	assert.Contains(t, result_html, "<h1>Hi!</h1>")
 	assert.Contains(t, result_html, "<p><strong>Yes!</strong></p>")
 }
+
+
+func TestWithInline(t *testing.T) {
+	html := `<html>
+        <head>
+        <title>Title</title>
+        <style type="text/css">
+        h1, h2 {
+        	width: 50px;
+        	color:red;
+        }
+        strong {
+        	text-decoration:none
+        }
+        </style>
+        </head>
+        <body>
+        <h1 style="width: 100%;">Hi!</h1>
+        <p><strong>Yes!</strong></p>
+        </body>
+        </html>`
+
+	p := NewPremailerFromString(html)
+	result_html, err := p.Transform()
+	assert.Nil(t, err)
+
+	assert.Contains(t, result_html, "<h1 style=\"color:red;width:100%\" width=\"100%\">Hi!</h1>")
+	assert.Contains(t, result_html, "<p><strong style=\"text-decoration:none\">Yes!</strong></p>")
+}
