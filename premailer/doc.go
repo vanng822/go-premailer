@@ -1,9 +1,9 @@
-//	Package premailer is for inline styling
+// Package premailer is for inline styling.
 // 
-//	import (
-//		"fmt"
-//		"github.com/vanng822/go-premailer/premailer"
-//		"log"
+// 	import (
+// 		"fmt"
+// 		"github.com/vanng822/go-premailer/premailer"
+// 		"log"
 //	)
 //	
 //	func main() {
