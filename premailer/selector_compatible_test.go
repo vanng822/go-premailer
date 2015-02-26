@@ -12,7 +12,6 @@ func TestSupportedSelectors(t *testing.T) {
 		".footer__content_wrapper--last",
 		"table[class=\"body\"] .footer__content td",
 		"table[class=\"body\"] td.footer__link_wrapper--first",
-		"table[class=\"body\"] td.footer__link_wrapper--last",
 		".header + .content",
 		"#firstname",
 		"p ~ ul",
@@ -35,6 +34,8 @@ func TestSupportedSelectors(t *testing.T) {
 		":not(p)",
 		"p:nth-child(2)",
 		"p:nth-last-child(2)",
+		"div:not(:nth-child(1))",
+		"div:not(:not(:first-child))",
 	}
 
 	html := `<html>
