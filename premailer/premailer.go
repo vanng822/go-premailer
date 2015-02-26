@@ -5,11 +5,15 @@ import (
 	"github.com/PuerkitoBio/goquery"
 	"github.com/vanng822/css"
 	"golang.org/x/net/html"
+	"regexp"
 	"sort"
 	"strconv"
 	"strings"
 	"sync"
 )
+
+var unmergableSelector = regexp.MustCompile("(?i)\\:{1,2}(visited|active|hover|focus|link|root|in-range|invalid|valid|after|before|selection|target|first\\-(line|letter))")
+var notSupportedSelector = regexp.MustCompile("(?i)\\:(checked|disabled|enabled|lang)")
 
 type premailer struct {
 	doc       *goquery.Document
@@ -57,8 +61,7 @@ func (pr *premailer) sortRules() {
 
 			selectors := strings.Split(rule.Style.SelectorText, ",")
 			for _, selector := range selectors {
-				// TODO handling filter selector
-				if strings.Contains(selector, ":") {
+				if unmergableSelector.MatchString(selector) || notSupportedSelector.MatchString(selector) {
 					// cause longer css
 					pr.leftover = append(pr.leftover, copyRule(selector, rule))
 					continue
