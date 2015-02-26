@@ -1,4 +1,4 @@
-// Package premailer is for inline styling
+//	Package premailer is for inline styling
 // 
 //	import (
 //		"fmt"
