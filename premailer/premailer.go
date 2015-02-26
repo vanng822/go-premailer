@@ -131,14 +131,6 @@ func (pr *premailer) applyInline() {
 	}
 }
 
-func makeRuleImportant(rule *css.CSSRule) string {
-	// this for using Text() which has nice sorted props
-	for _, s := range rule.Style.Styles {
-		s.Important = 1
-	}
-	return rule.Style.Text()
-}
-
 func (pr *premailer) addLeftover() {
 	if len(pr.leftover) > 0 {
 		pr.doc.Find("style").EachWithBreak(func(i int, s *goquery.Selection) bool {

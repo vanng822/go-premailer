@@ -10,3 +10,11 @@ func copyRule(selector string, rule *css.CSSRule) *css.CSSRule {
 	copiedRule := &css.CSSRule{Type: rule.Type, Style: copiedStyle}
 	return copiedRule
 }
+
+func makeRuleImportant(rule *css.CSSRule) string {
+	// this for using Text() which has nice sorted props
+	for _, s := range rule.Style.Styles {
+		s.Important = 1
+	}
+	return rule.Style.Text()
+}
