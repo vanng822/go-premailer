@@ -31,11 +31,11 @@ Inline styling for html in golang
 	
 # Demo
 	
-	http://premailer.isgoodness.com/
+http://premailer.isgoodness.com/
 	
 # Conversion endpoint
 
-	http://premailer.isgoodness.com/convert
+http://premailer.isgoodness.com/convert
 	
 	request POST:
 		html(string)
