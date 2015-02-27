@@ -34,6 +34,9 @@ func TestSupportedSelectors(t *testing.T) {
 		":not(p)",
 		"p:nth-child(2)",
 		"p:nth-last-child(2)",
+		"p:nth-of-type(2)",
+		"p:only-child",
+		"p:nth-last-of-type(2)",
 		"div:not(:nth-child(1))",
 		"div:not(:not(:first-child))",
 	}
@@ -98,6 +101,8 @@ func TestNotSupportedSelectors(t *testing.T) {
 		"input:checked",
 		"input:disabled",
 		"input:enabled",
+		"input:optional",
+		"input:read-only",
 		"p:lang(it)",
 	}
 
