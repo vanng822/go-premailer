@@ -29,3 +29,16 @@ Inline styling for html in golang
 	> go run main.go -i your_email.html
 	> go run main.go -i your_mail.html -o process_mail.html
 	
+# Demo
+	
+	http://premailer.isgoodness.com/
+	
+# Conversion endpoint
+
+	http://premailer.isgoodness.com/convert
+	
+	request POST:
+		html(string)
+	response:
+		{result: output}
+	
