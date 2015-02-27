@@ -5,6 +5,11 @@ import (
 	"os"
 )
 
+// NewPremailerFromFile take an filename
+// Read the content of this file
+// and create a goquery.Document
+// and then create and Premailer instance.
+// It will panic if any error happens
 func NewPremailerFromFile(filename string) Premailer {
 	fd, err := os.Open(filename)
 	if err != nil {

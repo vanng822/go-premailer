@@ -26,6 +26,8 @@ type premailer struct {
 	processed bool
 }
 
+// NewPremailer return a new instance of Premailer
+// It take a Document as argument and it shouldn't be nil
 func NewPremailer(doc *goquery.Document) Premailer {
 	pr := premailer{}
 	pr.doc = doc
@@ -158,6 +160,12 @@ func (pr *premailer) addLeftover() {
 	}
 }
 
+// Transform process and inlining css
+// It start to collect the rules in the document style tags
+// Calculate specificity and sort the rules based on that
+// It then collects the affected elements
+// And applies the rules on those
+// The leftover rules will put back into a style element
 func (pr *premailer) Transform() (string, error) {
 	if !pr.processed {
 		pr.collectRules()
