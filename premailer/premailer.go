@@ -12,6 +12,17 @@ import (
 	"sync"
 )
 
+// Inteface of Premailer
+type Premailer interface {
+	// Transform process and inlining css
+	// It start to collect the rules in the document style tags
+	// Calculate specificity and sort the rules based on that
+	// It then collects the affected elements
+	// And applies the rules on those
+	// The leftover rules will put back into a style element
+	Transform() (string, error)
+}
+
 var unmergableSelector = regexp.MustCompile("(?i)\\:{1,2}(visited|active|hover|focus|link|root|in-range|invalid|valid|after|before|selection|target|first\\-(line|letter))|^\\@")
 var notSupportedSelector = regexp.MustCompile("(?i)\\:(checked|disabled|enabled|lang)")
 
