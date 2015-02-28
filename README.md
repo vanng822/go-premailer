@@ -38,7 +38,9 @@ http://premailer.isgoodness.com/
 http://premailer.isgoodness.com/convert
 	
 	request POST:
-		html(string)
+		html: your mail
+		cssToAttributes: true|false
+		removeClasses: true|false
 	response:
 		{result: output}
 	
