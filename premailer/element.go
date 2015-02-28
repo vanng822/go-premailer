@@ -4,42 +4,45 @@ import (
 	"fmt"
 	"github.com/PuerkitoBio/goquery"
 	"github.com/vanng822/css"
-	"strings"
 	"sort"
+	"strings"
 )
 
 type elementRules struct {
-	element *goquery.Selection
-	rules   []*styleRule
+	element         *goquery.Selection
+	rules           []*styleRule
+	cssToAttributes bool
 }
 
 func (er *elementRules) inline() {
 	inline, _ := er.element.Attr("style")
-	
+
 	var inlineStyles map[string]*css.CSSStyleDeclaration
 	if inline != "" {
 		inlineStyles = css.ParseBlock(inline)
 	}
-	
+
 	styles := make(map[string]string)
 	for _, rule := range er.rules {
 		for prop, s := range rule.styles {
 			styles[prop] = s.Value
 		}
 	}
-	
+
 	if len(inlineStyles) > 0 {
 		for prop, s := range inlineStyles {
 			styles[prop] = s.Value
 		}
 	}
-	
+
 	final := make([]string, 0)
 	for p, v := range styles {
 		final = append(final, fmt.Sprintf("%s:%s", p, v))
-		er.style_to_basic_html_attribute(p, v)
+		if er.cssToAttributes {
+			er.style_to_basic_html_attribute(p, v)
+		}
 	}
-	
+
 	sort.Strings(final)
 	style := strings.Join(final, ";")
 	if style != "" {

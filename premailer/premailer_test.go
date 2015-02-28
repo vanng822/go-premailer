@@ -24,7 +24,7 @@ func TestBasicHTML(t *testing.T) {
         </body>
         </html>`
 
-	p := NewPremailerFromString(html)
+	p := NewPremailerFromString(html, nil)
 	result_html, err := p.Transform()
 	assert.Nil(t, err)
 
@@ -52,7 +52,7 @@ func TestDataPremailerIgnore(t *testing.T) {
         </body>
         </html>`
 
-	p := NewPremailerFromString(html)
+	p := NewPremailerFromString(html, nil)
 	result_html, err := p.Transform()
 	assert.Nil(t, err)
 
@@ -81,7 +81,7 @@ func TestWithInline(t *testing.T) {
         </body>
         </html>`
 
-	p := NewPremailerFromString(html)
+	p := NewPremailerFromString(html, nil)
 	result_html, err := p.Transform()
 	assert.Nil(t, err)
 
@@ -113,10 +113,70 @@ func TestPseudoSelectors(t *testing.T) {
         </body>
         </html>`
 
-	p := NewPremailerFromString(html)
+	p := NewPremailerFromString(html, nil)
 	result_html, err := p.Transform()
 	assert.Nil(t, err)
 
 	assert.Contains(t, result_html, "<a href=\"/home\" style=\"color:green\">Yes!</a>")
 	assert.Contains(t, result_html, "<style type=\"text/css\">")
+}
+
+
+func TestRemoveClass(t *testing.T) {
+	html := `<html>
+        <head>
+        <title>Title</title>
+        <style type="text/css">
+        h1, h2 {
+        	color:red;
+        }
+        .big {
+        	font-size: 40px;
+        }
+        </style>
+        </head>
+        <body>
+        <h1 class="big">Hi!</h1>
+        <p><strong>Yes!</strong></p>
+        </body>
+        </html>`
+
+	options := &Options{}
+	options.removeClasses = true
+	p := NewPremailerFromString(html, options)
+	result_html, err := p.Transform()
+	assert.Nil(t, err)
+
+	assert.Contains(t, result_html, "<h1 style=\"color:red;font-size:40px\">Hi!</h1>")
+	assert.Contains(t, result_html, "<p><strong>Yes!</strong></p>")
+}
+
+
+func TestCssToAttributesFalse(t *testing.T) {
+	html := `<html>
+        <head>
+        <title>Title</title>
+        <style type="text/css">
+        h1, h2 {
+        	color:red;
+        }
+        .wide {
+        	width: 1000px;
+        }
+        </style>
+        </head>
+        <body>
+        <h1 class="wide">Hi!</h1>
+        <p><strong>Yes!</strong></p>
+        </body>
+        </html>`
+
+	options := &Options{}
+	options.cssToAttributes = false
+	p := NewPremailerFromString(html, options)
+	result_html, err := p.Transform()
+	assert.Nil(t, err)
+
+	assert.Contains(t, result_html, "<h1 class=\"wide\" style=\"color:red;width:1000px\">Hi!</h1>")
+	assert.Contains(t, result_html, "<p><strong>Yes!</strong></p>")
 }

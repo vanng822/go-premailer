@@ -10,7 +10,7 @@ import (
 // and create a goquery.Document
 // and then create and Premailer instance.
 // It will panic if any error happens
-func NewPremailerFromFile(filename string) Premailer {
+func NewPremailerFromFile(filename string, options *Options) Premailer {
 	fd, err := os.Open(filename)
 	if err != nil {
 		panic(err)
@@ -20,5 +20,5 @@ func NewPremailerFromFile(filename string) Premailer {
 	if err != nil {
 		panic(err)
 	}
-	return NewPremailer(d)
+	return NewPremailer(d, options)
 }

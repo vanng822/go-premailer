@@ -13,3 +13,13 @@ type Premailer interface {
 	// The leftover rules will put back into a style element
 	Transform() (string, error)
 }
+
+// Options for controlling behaviour
+type Options struct {
+	// Remove class attribute from element
+	// Default false
+	removeClasses bool
+	// Copy related CSS properties into HTML attributes (e.g. background-color to bgcolor)
+	// Default true
+	cssToAttributes bool
+}

@@ -24,11 +24,12 @@ type premailer struct {
 	allRules  [][]*css.CSSRule
 	elementId int
 	processed bool
+	options   *Options
 }
 
 // NewPremailer return a new instance of Premailer
 // It take a Document as argument and it shouldn't be nil
-func NewPremailer(doc *goquery.Document) Premailer {
+func NewPremailer(doc *goquery.Document, options *Options) Premailer {
 	pr := premailer{}
 	pr.doc = doc
 	pr.rules = make([]*styleRule, 0)
@@ -36,6 +37,11 @@ func NewPremailer(doc *goquery.Document) Premailer {
 	pr.leftover = make([]*css.CSSRule, 0)
 	pr.elements = make(map[int]*elementRules)
 	pr.elIdAttr = "pr-el-id"
+	if options == nil {
+		options = &Options{}
+		options.cssToAttributes = true
+	}
+	pr.options = options
 	return &pr
 }
 
@@ -117,7 +123,7 @@ func (pr *premailer) collectElements() {
 				s.SetAttr(pr.elIdAttr, strconv.Itoa(pr.elementId))
 				rules := make([]*styleRule, 0)
 				rules = append(rules, rule)
-				pr.elements[pr.elementId] = &elementRules{element: s, rules: rules}
+				pr.elements[pr.elementId] = &elementRules{element: s, rules: rules, cssToAttributes: pr.options.cssToAttributes}
 				pr.elementId += 1
 			}
 		})
@@ -129,6 +135,9 @@ func (pr *premailer) applyInline() {
 	for _, element := range pr.elements {
 		element.inline()
 		element.element.RemoveAttr(pr.elIdAttr)
+		if pr.options.removeClasses {
+			element.element.RemoveAttr("class")
+		}
 	}
 }
 
