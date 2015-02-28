@@ -35,7 +35,7 @@ func (er *elementRules) inline() {
 		}
 	}
 
-	final := make([]string, 0)
+	final := make([]string, 0, len(styles))
 	for p, v := range styles {
 		final = append(final, fmt.Sprintf("%s:%s", p, v))
 		if er.cssToAttributes {
