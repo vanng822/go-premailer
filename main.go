@@ -22,7 +22,9 @@ func main() {
 		return
 	}
 	start := time.Now()
-	prem := premailer.NewPremailerFromFile(inputFile)
+	options := &premailer.Options{}
+	options.
+	prem := premailer.NewPremailerFromFile(inputFile, options)
 	html, err := prem.Transform()
 	log.Printf("took: %v", time.Now().Sub(start))
 	if err != nil {

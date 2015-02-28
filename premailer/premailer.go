@@ -39,7 +39,7 @@ func NewPremailer(doc *goquery.Document, options *Options) Premailer {
 	pr.elIdAttr = "pr-el-id"
 	if options == nil {
 		options = &Options{}
-		options.cssToAttributes = true
+		options.CssToAttributes = true
 	}
 	pr.options = options
 	return &pr
@@ -123,7 +123,7 @@ func (pr *premailer) collectElements() {
 				s.SetAttr(pr.elIdAttr, strconv.Itoa(pr.elementId))
 				rules := make([]*styleRule, 0)
 				rules = append(rules, rule)
-				pr.elements[pr.elementId] = &elementRules{element: s, rules: rules, cssToAttributes: pr.options.cssToAttributes}
+				pr.elements[pr.elementId] = &elementRules{element: s, rules: rules, cssToAttributes: pr.options.CssToAttributes}
 				pr.elementId += 1
 			}
 		})
@@ -135,7 +135,7 @@ func (pr *premailer) applyInline() {
 	for _, element := range pr.elements {
 		element.inline()
 		element.element.RemoveAttr(pr.elIdAttr)
-		if pr.options.removeClasses {
+		if pr.options.RemoveClasses {
 			element.element.RemoveAttr("class")
 		}
 	}

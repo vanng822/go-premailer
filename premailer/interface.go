@@ -18,8 +18,8 @@ type Premailer interface {
 type Options struct {
 	// Remove class attribute from element
 	// Default false
-	removeClasses bool
+	RemoveClasses bool
 	// Copy related CSS properties into HTML attributes (e.g. background-color to bgcolor)
 	// Default true
-	cssToAttributes bool
+	CssToAttributes bool
 }

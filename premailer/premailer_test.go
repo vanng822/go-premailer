@@ -142,7 +142,7 @@ func TestRemoveClass(t *testing.T) {
         </html>`
 
 	options := &Options{}
-	options.removeClasses = true
+	options.RemoveClasses = true
 	p := NewPremailerFromString(html, options)
 	result_html, err := p.Transform()
 	assert.Nil(t, err)
@@ -172,7 +172,7 @@ func TestCssToAttributesFalse(t *testing.T) {
         </html>`
 
 	options := &Options{}
-	options.cssToAttributes = false
+	options.CssToAttributes = false
 	p := NewPremailerFromString(html, options)
 	result_html, err := p.Transform()
 	assert.Nil(t, err)
