@@ -38,8 +38,7 @@ func NewPremailer(doc *goquery.Document, options *Options) Premailer {
 	pr.elements = make(map[int]*elementRules)
 	pr.elIdAttr = "pr-el-id"
 	if options == nil {
-		options = &Options{}
-		options.CssToAttributes = true
+		options = NewOptions()
 	}
 	pr.options = options
 	return &pr

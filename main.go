@@ -26,7 +26,7 @@ func main() {
 		return
 	}
 	start := time.Now()
-	options := &premailer.Options{}
+	options := premailer.NewOptions()
 	options.RemoveClasses = removeClasses
 	options.CssToAttributes = !skipCssToAttributes
 	prem := premailer.NewPremailerFromFile(inputFile, options)
