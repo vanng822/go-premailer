@@ -87,6 +87,7 @@ func TestWithInline(t *testing.T) {
 
 	assert.Contains(t, result_html, "<h1 style=\"color:red;width:100%\" width=\"100%\">Hi!</h1>")
 	assert.Contains(t, result_html, "<p><strong style=\"text-decoration:none\">Yes!</strong></p>")
+	assert.NotContains(t, result_html, "<style type=\"text/css\">")	
 }
 
 func TestPseudoSelectors(t *testing.T) {
@@ -117,4 +118,5 @@ func TestPseudoSelectors(t *testing.T) {
 	assert.Nil(t, err)
 
 	assert.Contains(t, result_html, "<a href=\"/home\" style=\"color:green\">Yes!</a>")
+	assert.Contains(t, result_html, "<style type=\"text/css\">")
 }

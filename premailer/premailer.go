@@ -100,8 +100,7 @@ func (pr *premailer) collectRules() {
 			ss := css.Parse(s.Text())
 			r := ss.GetCSSRuleList()
 			pr.allRules[i] = r
-			// how to remove this style element
-			s.Empty()
+			s.ReplaceWithHtml("")
 		}()
 	})
 	wg.Wait()
@@ -135,28 +134,32 @@ func (pr *premailer) applyInline() {
 
 func (pr *premailer) addLeftover() {
 	if len(pr.leftover) > 0 {
-		pr.doc.Find("style").EachWithBreak(func(i int, s *goquery.Selection) bool {
-			cssNode := &html.Node{}
-			cssData := make([]string, 0, len(pr.leftover))
-			for _, rule := range pr.leftover {
-				if rule.Type == css.MEDIA_RULE {
-					mcssData := make([]string, 0, len(rule.Rules))
-					for _, mrule := range rule.Rules {
-						mcssData = append(mcssData, makeRuleImportant(mrule))
-					}
-					cssData = append(cssData, fmt.Sprintf("%s %s{\n%s\n}\n",
-						rule.Type.Text(),
-						rule.Style.SelectorText,
-						strings.Join(mcssData, "\n")))
-				} else {
-					cssData = append(cssData, makeRuleImportant(rule))
+		headNode := pr.doc.Find("head")
+
+		styleNode := &html.Node{}
+		styleNode.Type = html.ElementNode
+		styleNode.Data = "style"
+		styleNode.Attr = []html.Attribute{html.Attribute{Key: "type", Val: "text/css"}}
+		cssNode := &html.Node{}
+		cssData := make([]string, 0, len(pr.leftover))
+		for _, rule := range pr.leftover {
+			if rule.Type == css.MEDIA_RULE {
+				mcssData := make([]string, 0, len(rule.Rules))
+				for _, mrule := range rule.Rules {
+					mcssData = append(mcssData, makeRuleImportant(mrule))
 				}
+				cssData = append(cssData, fmt.Sprintf("%s %s{\n%s\n}\n",
+					rule.Type.Text(),
+					rule.Style.SelectorText,
+					strings.Join(mcssData, "\n")))
+			} else {
+				cssData = append(cssData, makeRuleImportant(rule))
 			}
-			cssNode.Data = strings.Join(cssData, "")
-			cssNode.Type = html.TextNode
-			s.AppendNodes(cssNode)
-			return false
-		})
+		}
+		cssNode.Data = strings.Join(cssData, "")
+		cssNode.Type = html.TextNode
+		styleNode.AppendChild(cssNode)
+		headNode.AppendNodes(styleNode)
 	}
 }
 
