@@ -12,7 +12,7 @@ import (
 	"sync"
 )
 
-var unmergableSelector = regexp.MustCompile("(?i)\\:{1,2}(visited|active|hover|focus|link|root|in-range|invalid|valid|after|before|selection|target|first\\-(line|letter))")
+var unmergableSelector = regexp.MustCompile("(?i)\\:{1,2}(visited|active|hover|focus|link|root|in-range|invalid|valid|after|before|selection|target|first\\-(line|letter))|^\\@")
 var notSupportedSelector = regexp.MustCompile("(?i)\\:(checked|disabled|enabled|lang)")
 
 type premailer struct {
