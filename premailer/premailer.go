@@ -29,7 +29,7 @@ var notSupportedSelector = regexp.MustCompile("(?i)\\:(checked|disabled|enabled|
 type premailer struct {
 	doc       *goquery.Document
 	elIdAttr  string
-	elements  map[int]*elementRules
+	elements  map[string]*elementRules
 	rules     []*styleRule
 	leftover  []*css.CSSRule
 	allRules  [][]*css.CSSRule
@@ -46,7 +46,7 @@ func NewPremailer(doc *goquery.Document, options *Options) Premailer {
 	pr.rules = make([]*styleRule, 0)
 	pr.allRules = make([][]*css.CSSRule, 0)
 	pr.leftover = make([]*css.CSSRule, 0)
-	pr.elements = make(map[int]*elementRules)
+	pr.elements = make(map[string]*elementRules)
 	pr.elIdAttr = "pr-el-id"
 	if options == nil {
 		options = NewOptions()
@@ -126,14 +126,14 @@ func (pr *premailer) collectRules() {
 func (pr *premailer) collectElements() {
 	for _, rule := range pr.rules {
 		pr.doc.Find(rule.selector).Each(func(i int, s *goquery.Selection) {
-			if val, exist := s.Attr(pr.elIdAttr); exist {
-				id, _ := strconv.Atoi(val)
+			if id, exist := s.Attr(pr.elIdAttr); exist {
 				pr.elements[id].rules = append(pr.elements[id].rules, rule)
 			} else {
-				s.SetAttr(pr.elIdAttr, strconv.Itoa(pr.elementId))
+				id := strconv.Itoa(pr.elementId)
+				s.SetAttr(pr.elIdAttr, id)
 				rules := make([]*styleRule, 0)
 				rules = append(rules, rule)
-				pr.elements[pr.elementId] = &elementRules{element: s, rules: rules, cssToAttributes: pr.options.CssToAttributes}
+				pr.elements[id] = &elementRules{element: s, rules: rules, cssToAttributes: pr.options.CssToAttributes}
 				pr.elementId += 1
 			}
 		})
