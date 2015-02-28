@@ -11,11 +11,15 @@ import (
 
 func main() {
 	var (
-		inputFile  string
-		outputFile string
+		inputFile           string
+		outputFile          string
+		removeClasses       bool
+		skipCssToAttributes bool
 	)
 	flag.StringVar(&inputFile, "i", "", "Input file")
 	flag.StringVar(&outputFile, "o", "", "Output file")
+	flag.BoolVar(&removeClasses, "remove-classes", false, "Remove class attribute")
+	flag.BoolVar(&skipCssToAttributes, "skip-css-to-attributes", false, "No copy of css property to html attribute")
 	flag.Parse()
 	if inputFile == "" {
 		flag.Usage()
@@ -23,7 +27,8 @@ func main() {
 	}
 	start := time.Now()
 	options := &premailer.Options{}
-	options.
+	options.RemoveClasses = removeClasses
+	options.CssToAttributes = !skipCssToAttributes
 	prem := premailer.NewPremailerFromFile(inputFile, options)
 	html, err := prem.Transform()
 	log.Printf("took: %v", time.Now().Sub(start))
