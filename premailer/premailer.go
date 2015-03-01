@@ -111,13 +111,12 @@ func (pr *premailer) collectRules() {
 		}
 		wg.Add(1)
 		pr.allRules = append(pr.allRules, nil)
-		go func() {
+		go func(ruleSetIndex int) {
 			defer wg.Done()
 			ss := css.Parse(s.Text())
-			r := ss.GetCSSRuleList()
-			pr.allRules[i] = r
+			pr.allRules[ruleSetIndex] = ss.GetCSSRuleList()
 			s.ReplaceWithHtml("")
-		}()
+		}(len(pr.allRules) - 1)
 	})
 	wg.Wait()
 

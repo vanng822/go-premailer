@@ -294,6 +294,60 @@ func TestWithMediaAttribute(t *testing.T) {
 		        padding-bottom: 5px		   
 		 }
         </style>
+        <style>
+        	
+        </style>
+        </head>
+        <body>
+        <h1>Hi!</h1>
+        <p class="wide"><strong>Yes!</strong></p>
+        </body>
+        </html>`
+
+	p := NewPremailerFromString(html, NewOptions())
+	result_html, err := p.Transform()
+	assert.Nil(t, err)
+
+	assert.Contains(t, result_html, "<h1 style=\"color:red\">Hi!</h1>")
+	assert.Contains(t, result_html, "<p class=\"wide\" style=\"color:blue;width:100px\" width=\"100\"><strong>Yes!</strong></p>")
+
+	assert.Contains(t, result_html, "<style type=\"text/css\" media=\"all and (min-width: 62em)\">")
+	assert.Contains(t, result_html, "font-size: 55px;")
+	assert.Contains(t, result_html, "line-height: 60px;")
+	assert.Contains(t, result_html, "padding-top: 0;")
+	assert.Contains(t, result_html, "padding-bottom: 5px")
+	
+}
+
+func TestIndexOutOfRange(t *testing.T) {
+	html := `<html>
+        <head>
+        <title>Title</title>
+        <style type="text/css">
+        h1, h2 {
+        	color:red;
+        }
+        p {
+        	width: 100px !important;
+        	color: blue
+        }
+        .wide {
+        	width: 1000px;
+        }
+       	</style>
+      	<style type="text/css" media="all and (min-width: 62em)">
+		    h1 {
+		        font-size: 55px;
+		        line-height: 60px;
+		        padding-top: 0;
+		        padding-bottom: 5px		   
+		 }
+        </style>
+        <style>
+        	.some {
+        		color: red;
+        	}
+        </style>
         </head>
         <body>
         <h1>Hi!</h1>
