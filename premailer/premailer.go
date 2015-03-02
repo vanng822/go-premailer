@@ -56,11 +56,12 @@ func NewPremailer(doc *goquery.Document, options *Options) Premailer {
 }
 
 func (pr *premailer) sortRules() {
+	ruleIndex := 0
 	for ruleSetIndex, rules := range pr.allRules {
 		if rules == nil {
 			continue
 		}
-		for ruleIndex, rule := range rules {
+		for _, rule := range rules {
 			if rule.Type != css.STYLE_RULE {
 				pr.leftover = append(pr.leftover, rule)
 				continue
@@ -90,9 +91,11 @@ func (pr *premailer) sortRules() {
 				}
 				if len(normalStyles) > 0 {
 					pr.rules = append(pr.rules, &styleRule{makeSpecificity(0, ruleSetIndex, ruleIndex, selector), selector, normalStyles})
+					ruleIndex += 1
 				}
 				if len(importantStyles) > 0 {
 					pr.rules = append(pr.rules, &styleRule{makeSpecificity(1, ruleSetIndex, ruleIndex, selector), selector, importantStyles})
+					ruleIndex += 1
 				}
 			}
 		}
