@@ -30,7 +30,11 @@ var _type_selector_regex = regexp.MustCompile("(^|\\s)\\w")
 func makeSpecificity(important, ruleSetIndex, ruleIndex int, selector string) *specificity {
 	spec := specificity{}
 	// determine values for priority
-	spec.important = important
+	if important > 0 {
+		spec.important = 1
+	} else {
+		spec.important = 0
+	}
 	spec.idCount = strings.Count(selector, "#")
 	spec.classCount = strings.Count(selector, ".")
 	spec.attrCount = strings.Count(selector, "[")
