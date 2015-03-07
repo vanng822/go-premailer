@@ -2,6 +2,10 @@
 
 Inline styling for html in golang
 
+# Document
+
+[![GoDoc](https://godoc.org/github.com/vanng822/go-premailer/premailer?status.svg)](https://godoc.org/github.com/vanng822/go-premailer/premailer)
+
 # install
 	
 	go get github.com/vanng822/go-premailer/premailer
