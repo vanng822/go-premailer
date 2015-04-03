@@ -30,7 +30,7 @@ func main() {
 	r := render.New()
 
 	app.Get("/", func(w http.ResponseWriter, req *http.Request, _ r2router.Params) {
-		r.JSON(w, http.StatusOK, r2router.M{"Usage": "POST / html=HTML&cssToAttributes=boolean&removeClasses=boolean"})
+		r.JSON(w, http.StatusOK, r2router.M{"usage": "POST / html=HTML&cssToAttributes=boolean&removeClasses=boolean"})
 	})
 	app.Post("/", func(w http.ResponseWriter, req *http.Request, _ r2router.Params) {
 		req.ParseForm()
@@ -51,7 +51,7 @@ func main() {
 		} else {
 			result = ""
 		}
-		r.JSON(w, http.StatusOK, map[string]string{"result": result})
+		r.JSON(w, http.StatusOK, r2router.M{"result": result})
 	})
 
 	log.Printf("listening to address %s:%d", host, port)
