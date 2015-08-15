@@ -105,7 +105,7 @@ func (pr *premailer) sortRules() {
 
 func (pr *premailer) collectRules() {
 	var wg sync.WaitGroup
-	pr.doc.Find("style:not([data-premailer='ignore'])").Each(func(i int, s *goquery.Selection) {
+	pr.doc.Find("style:not([data-premailer='ignore'])").Each(func(_ int, s *goquery.Selection) {
 		if _, exist := s.Attr("media"); exist {
 			return
 		}
@@ -124,7 +124,7 @@ func (pr *premailer) collectRules() {
 
 func (pr *premailer) collectElements() {
 	for _, rule := range pr.rules {
-		pr.doc.Find(rule.selector).Each(func(i int, s *goquery.Selection) {
+		pr.doc.Find(rule.selector).Each(func(_ int, s *goquery.Selection) {
 			if id, exist := s.Attr(pr.elIdAttr); exist {
 				pr.elements[id].rules = append(pr.elements[id].rules, rule)
 			} else {
