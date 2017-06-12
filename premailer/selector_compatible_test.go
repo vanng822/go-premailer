@@ -96,7 +96,7 @@ func TestNotSupportedSelectors(t *testing.T) {
 
 	pr := premailer{}
 	pr.doc = doc
-	
+
 	notSupportedSelectors := []string{
 		"input:checked",
 		"input:disabled",

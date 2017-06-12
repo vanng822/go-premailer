@@ -1,8 +1,9 @@
 package premailer
 
 import (
-	"github.com/stretchr/testify/assert"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestBasicHTML(t *testing.T) {
@@ -316,7 +317,6 @@ func TestWithMediaAttribute(t *testing.T) {
 	assert.Contains(t, result_html, "line-height: 60px;")
 	assert.Contains(t, result_html, "padding-top: 0;")
 	assert.Contains(t, result_html, "padding-bottom: 5px")
-	
 }
 
 func TestIndexOutOfRange(t *testing.T) {
@@ -367,5 +367,4 @@ func TestIndexOutOfRange(t *testing.T) {
 	assert.Contains(t, result_html, "line-height: 60px;")
 	assert.Contains(t, result_html, "padding-top: 0;")
 	assert.Contains(t, result_html, "padding-bottom: 5px")
-	
 }
