@@ -94,3 +94,25 @@ func TestSpecificitySortRuleIndex(t *testing.T) {
 	assert.Equal(t, specificity1, undertest[0].specificity)
 	assert.Equal(t, specificity0, undertest[1].specificity)
 }
+
+func TestSpecificitySortLongArray(t *testing.T) {
+	// It has to be longer than 6 due to internal implementation of sort.Sort(),
+	rules := []*styleRule{
+		&styleRule{specificity: makeSpecificity(0, 0, 1, "table.padded")},
+		&styleRule{specificity: makeSpecificity(0, 0, 2, "table.padded")},
+		&styleRule{specificity: makeSpecificity(0, 0, 3, "table.padded")},
+		&styleRule{specificity: makeSpecificity(0, 0, 4, "table.padded")},
+		&styleRule{specificity: makeSpecificity(0, 0, 5, "table.padded")},
+		&styleRule{specificity: makeSpecificity(0, 0, 6, "table.padded")},
+		&styleRule{specificity: makeSpecificity(0, 0, 11, "table")},
+	}
+
+	sort.Sort(bySpecificity(rules))
+
+	ruleIndices := make([]int, len(rules))
+	for i := range rules {
+		ruleIndices[i] = rules[i].specificity.ruleIndex
+	}
+	expectedRuleIndices := []int{11, 1, 2, 3, 4, 5, 6}
+	assert.Equal(t, expectedRuleIndices, ruleIndices)
+}

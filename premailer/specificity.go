@@ -60,6 +60,9 @@ func (bs bySpecificity) Less(i, j int) bool {
 		if v < jorders[n] {
 			return true
 		}
+		if v > jorders[n] {
+			return false
+		}
 	}
 	return false
 }
