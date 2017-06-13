@@ -1,22 +1,22 @@
 // Package premailer is for inline styling.
-// 
+//
 // 	import (
 // 		"fmt"
 // 		"github.com/vanng822/go-premailer/premailer"
 // 		"log"
 //	)
-//	
+//
 //	func main() {
 //		prem := premailer.NewPremailerFromFile(inputFile, premailer.NewOptions())
 //		html, err := prem.Transform()
 //		if err != nil {
 //			log.Fatal(err)
 //		}
-//		
+//
 //		fmt.Println(html)
 //	}
 //	// Input
-// 
+//
 //	<html>
 //	<head>
 //	<title>Title</title>
@@ -30,7 +30,7 @@
 //		<p><strong>Yes!</strong></p>
 //	</body>
 //	</html>
-//	
+//
 // // Output
 //
 //	<html>
@@ -43,5 +43,3 @@
 //	</body>
 //	</html>
 package premailer
-
-

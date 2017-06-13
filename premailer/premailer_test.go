@@ -1,8 +1,9 @@
 package premailer
 
 import (
-	"github.com/stretchr/testify/assert"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestBasicHTML(t *testing.T) {
@@ -316,7 +317,6 @@ func TestWithMediaAttribute(t *testing.T) {
 	assert.Contains(t, result_html, "line-height: 60px;")
 	assert.Contains(t, result_html, "padding-top: 0;")
 	assert.Contains(t, result_html, "padding-bottom: 5px")
-	
 }
 
 func TestIndexOutOfRange(t *testing.T) {
@@ -367,5 +367,40 @@ func TestIndexOutOfRange(t *testing.T) {
 	assert.Contains(t, result_html, "line-height: 60px;")
 	assert.Contains(t, result_html, "padding-top: 0;")
 	assert.Contains(t, result_html, "padding-bottom: 5px")
-	
+}
+
+func TestSpecificity(t *testing.T) {
+	html := `<html>
+        <head>
+        <title>Title</title>
+        <style type="text/css">
+		table.bar-chart td.bar-area {
+			padding: 10px;
+		}
+		table { width: 91%; }
+		table { width: 92%; }
+		table { width: 93%; }
+		table { width: 94%; }
+		table { width: 95%; }
+		table { width: 96%; }
+		table { width: 97%; }
+		table.bar-chart td {
+			padding: 5px;
+		}
+        </style>
+        </head>
+        <body>
+		<table class="bar-chart">
+			<tr><td>1</td></tr>
+			<tr><td class="bar-area">2</td></tr>
+		</table>
+        </body>
+        </html>`
+
+	p := NewPremailerFromString(html, NewOptions())
+	result_html, err := p.Transform()
+	assert.Nil(t, err)
+
+	assert.Contains(t, result_html, `<tr><td style="padding:5px">1</td></tr>`)
+	assert.Contains(t, result_html, `<tr><td class="bar-area" style="padding:10px">2</td></tr>`)
 }

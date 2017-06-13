@@ -1,28 +1,28 @@
 package premailer
 
 import (
-	"strings"
 	"regexp"
-	)
+	"strings"
+)
 
 // https://developer.mozilla.org/en-US/docs/Web/CSS/Specificity
 // https://developer.mozilla.org/en-US/docs/Web/CSS/Reference#Selectors
 
 type specificity struct {
-	important   int
-	idCount    int
-	classCount int
-	typeCount  int
-	attrCount  int
+	important    int
+	idCount      int
+	classCount   int
+	typeCount    int
+	attrCount    int
 	ruleSetIndex int
-	ruleIndex int
+	ruleIndex    int
 }
 
 func (s *specificity) importantOrders() []int {
 	return []int{s.important, s.idCount,
-			s.classCount, s.attrCount,
-			s.typeCount, s.ruleSetIndex,
-			s.ruleIndex}
+		s.classCount, s.attrCount,
+		s.typeCount, s.ruleSetIndex,
+		s.ruleIndex}
 }
 
 var _type_selector_regex = regexp.MustCompile("(^|\\s)\\w")
@@ -59,6 +59,9 @@ func (bs bySpecificity) Less(i, j int) bool {
 	for n, v := range iorders {
 		if v < jorders[n] {
 			return true
+		}
+		if v > jorders[n] {
+			return false
 		}
 	}
 	return false
