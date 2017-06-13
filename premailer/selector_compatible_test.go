@@ -107,8 +107,6 @@ func TestNotSupportedSelectors(t *testing.T) {
 	}
 
 	for _, selector := range notSupportedSelectors {
-		assert.Panics(t, func() {
-			pr.doc.Find(selector)
-		})
+		assert.Equal(t, 0, pr.doc.Find(selector).Length())
 	}
 }
