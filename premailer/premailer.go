@@ -2,14 +2,16 @@ package premailer
 
 import (
 	"fmt"
-	"github.com/PuerkitoBio/goquery"
-	"github.com/vanng822/css"
-	"golang.org/x/net/html"
+	"log"
 	"regexp"
 	"sort"
 	"strconv"
 	"strings"
 	"sync"
+
+	"github.com/PuerkitoBio/goquery"
+	"github.com/vanng822/css"
+	"golang.org/x/net/html"
 )
 
 // Inteface of Premailer
@@ -112,7 +114,14 @@ func (pr *premailer) collectRules() {
 		wg.Add(1)
 		pr.allRules = append(pr.allRules, nil)
 		go func(ruleSetIndex int) {
-			defer wg.Done()
+			defer func() {
+				wg.Done()
+				if r := recover(); r != nil {
+					pr.allRules[ruleSetIndex] = nil
+					log.Println("Got error when passing css")
+					log.Println(r)
+				}
+			}()
 			ss := css.Parse(s.Text())
 			pr.allRules[ruleSetIndex] = ss.GetCSSRuleList()
 			s.ReplaceWithHtml("")
