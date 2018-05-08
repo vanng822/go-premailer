@@ -292,16 +292,22 @@ func TestWithMediaAttribute(t *testing.T) {
 		        font-size: 55px;
 		        line-height: 60px;
 		        padding-top: 0;
-		        padding-bottom: 5px		   
+		        padding-bottom: 5px
 		 }
         </style>
+        <style type="text/css" media="all">
+		h3 {
+			color: black;
+		}
+		</style>
         <style>
-        	
+
         </style>
         </head>
         <body>
         <h1>Hi!</h1>
         <p class="wide"><strong>Yes!</strong></p>
+        <h3>Hi, all media style!</h3>
         </body>
         </html>`
 
@@ -311,12 +317,16 @@ func TestWithMediaAttribute(t *testing.T) {
 
 	assert.Contains(t, result_html, "<h1 style=\"color:red\">Hi!</h1>")
 	assert.Contains(t, result_html, "<p class=\"wide\" style=\"color:blue;width:100px\" width=\"100\"><strong>Yes!</strong></p>")
+	assert.Contains(t, result_html, "<h3 style=\"color:black\">Hi, all media style!</h3>")
 
 	assert.Contains(t, result_html, "<style type=\"text/css\" media=\"all and (min-width: 62em)\">")
 	assert.Contains(t, result_html, "font-size: 55px;")
 	assert.Contains(t, result_html, "line-height: 60px;")
 	assert.Contains(t, result_html, "padding-top: 0;")
 	assert.Contains(t, result_html, "padding-bottom: 5px")
+
+	assert.NotContains(t, result_html, "<style type=\"text/css\" media=\"all\">")
+	assert.NotContains(t, result_html, "color: black;")
 }
 
 func TestIndexOutOfRange(t *testing.T) {
@@ -340,7 +350,7 @@ func TestIndexOutOfRange(t *testing.T) {
 		        font-size: 55px;
 		        line-height: 60px;
 		        padding-top: 0;
-		        padding-bottom: 5px		   
+		        padding-bottom: 5px
 		 }
         </style>
         <style>
