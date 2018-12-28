@@ -203,6 +203,7 @@ func (pr *premailer) Transform() (string, error) {
 		pr.collectElements()
 		pr.applyInline()
 		pr.addLeftover()
+		pr.processed = true
 	}
 	return pr.doc.Html()
 }
