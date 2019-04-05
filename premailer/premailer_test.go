@@ -38,7 +38,8 @@ func TestBasicHTML(t *testing.T) {
         </body>
         </html>`
 
-	p := NewPremailerFromString(html, nil)
+	p, err := NewPremailerFromString(html, nil)
+	assert.Nil(t, err)
 	result_html, err := p.Transform()
 	assert.Nil(t, err)
 
@@ -68,7 +69,8 @@ func TestDataPremailerIgnore(t *testing.T) {
         </body>
         </html>`
 
-	p := NewPremailerFromString(html, nil)
+	p, err := NewPremailerFromString(html, nil)
+	assert.Nil(t, err)
 	result_html, err := p.Transform()
 	assert.Nil(t, err)
 
@@ -96,7 +98,8 @@ func TestWithInline(t *testing.T) {
         </body>
         </html>`
 
-	p := NewPremailerFromString(html, nil)
+	p, err := NewPremailerFromString(html, nil)
+	assert.Nil(t, err)
 	result_html, err := p.Transform()
 	assert.Nil(t, err)
 
@@ -128,7 +131,8 @@ func TestPseudoSelectors(t *testing.T) {
         </body>
         </html>`
 
-	p := NewPremailerFromString(html, nil)
+	p, err := NewPremailerFromString(html, nil)
+	assert.Nil(t, err)
 	result_html, err := p.Transform()
 	assert.Nil(t, err)
 
@@ -158,7 +162,8 @@ func TestRemoveClass(t *testing.T) {
 
 	options := &Options{}
 	options.RemoveClasses = true
-	p := NewPremailerFromString(html, options)
+	p, err := NewPremailerFromString(html, options)
+	assert.Nil(t, err)
 	result_html, err := p.Transform()
 	assert.Nil(t, err)
 
@@ -187,7 +192,8 @@ func TestCssToAttributesFalse(t *testing.T) {
 
 	options := &Options{}
 	options.CssToAttributes = false
-	p := NewPremailerFromString(html, options)
+	p, err := NewPremailerFromString(html, options)
+	assert.Nil(t, err)
 	result_html, err := p.Transform()
 	assert.Nil(t, err)
 
@@ -218,7 +224,8 @@ func TestWithImportant(t *testing.T) {
         </body>
         </html>`
 
-	p := NewPremailerFromString(html, NewOptions())
+	p, err := NewPremailerFromString(html, NewOptions())
+	assert.Nil(t, err)
 	result_html, err := p.Transform()
 	assert.Nil(t, err)
 
@@ -257,7 +264,8 @@ func TestWithMediaRule(t *testing.T) {
         </body>
         </html>`
 
-	p := NewPremailerFromString(html, NewOptions())
+	p, err := NewPremailerFromString(html, NewOptions())
+	assert.Nil(t, err)
 	result_html, err := p.Transform()
 	assert.Nil(t, err)
 
@@ -311,7 +319,8 @@ func TestWithMediaAttribute(t *testing.T) {
         </body>
         </html>`
 
-	p := NewPremailerFromString(html, NewOptions())
+	p, err := NewPremailerFromString(html, NewOptions())
+	assert.Nil(t, err)
 	result_html, err := p.Transform()
 	assert.Nil(t, err)
 
@@ -365,7 +374,8 @@ func TestIndexOutOfRange(t *testing.T) {
         </body>
         </html>`
 
-	p := NewPremailerFromString(html, NewOptions())
+	p, err := NewPremailerFromString(html, NewOptions())
+	assert.Nil(t, err)
 	result_html, err := p.Transform()
 	assert.Nil(t, err)
 
@@ -407,7 +417,8 @@ func TestSpecificity(t *testing.T) {
         </body>
         </html>`
 
-	p := NewPremailerFromString(html, NewOptions())
+	p, err := NewPremailerFromString(html, NewOptions())
+	assert.Nil(t, err)
 	result_html, err := p.Transform()
 	assert.Nil(t, err)
 

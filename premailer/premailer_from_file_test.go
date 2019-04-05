@@ -1,12 +1,14 @@
 package premailer
 
 import (
-	"github.com/stretchr/testify/assert"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestBasicHTMLFromFile(t *testing.T) {
-	p := NewPremailerFromFile("data/markup_test.html", nil)
+	p, err := NewPremailerFromFile("data/markup_test.html", nil)
+	assert.Nil(t, err)
 	result_html, err := p.Transform()
 	assert.Nil(t, err)
 
@@ -17,8 +19,8 @@ func TestBasicHTMLFromFile(t *testing.T) {
 	assert.Contains(t, result_html, "<div style=\"background-color:green\" bgcolor=\"green\">Green color</div>")
 }
 
-func TestFromFilePanic(t *testing.T) {
-	assert.Panics(t, func() {
-		NewPremailerFromFile("data/blablabla.html", nil)
-	})
+func TestFromFileNotFound(t *testing.T) {
+	p, err := NewPremailerFromFile("data/blablabla.html", nil)
+	assert.NotNil(t, err)
+	assert.Nil(t, p)
 }

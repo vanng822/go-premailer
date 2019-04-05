@@ -1,19 +1,19 @@
 package premailer
 
 import (
-	"github.com/PuerkitoBio/goquery"
 	"strings"
+
+	"github.com/PuerkitoBio/goquery"
 )
 
 // NewPremailerFromString take in a document in string format
 // and create a goquery.Document
 // and then create and Premailer instance.
-// It will panic if any error happens
-func NewPremailerFromString(doc string, options *Options) Premailer {
+func NewPremailerFromString(doc string, options *Options) (Premailer, error) {
 	read := strings.NewReader(doc)
 	d, err := goquery.NewDocumentFromReader(read)
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
-	return NewPremailer(d, options)
+	return NewPremailer(d, options), nil
 }
