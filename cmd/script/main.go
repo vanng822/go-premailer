@@ -3,10 +3,11 @@ package main
 import (
 	"flag"
 	"fmt"
-	"github.com/vanng822/go-premailer/premailer"
 	"log"
 	"os"
 	"time"
+
+	"github.com/vanng822/go-premailer/premailer"
 )
 
 func main() {
@@ -29,7 +30,10 @@ func main() {
 	options := premailer.NewOptions()
 	options.RemoveClasses = removeClasses
 	options.CssToAttributes = !skipCssToAttributes
-	prem := premailer.NewPremailerFromFile(inputFile, options)
+	prem, err := premailer.NewPremailerFromFile(inputFile, options)
+	if err != nil {
+		log.Fatal(err)
+	}
 	html, err := prem.Transform()
 	log.Printf("took: %v", time.Now().Sub(start))
 	if err != nil {

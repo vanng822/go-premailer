@@ -3,14 +3,15 @@ package main
 import (
 	"flag"
 	"fmt"
-	"github.com/unrolled/render"
-	"github.com/vanng822/go-premailer/premailer"
-	"github.com/vanng822/r2router"
 	"log"
 	"net/http"
 	"os"
 	"os/signal"
 	"syscall"
+
+	"github.com/unrolled/render"
+	"github.com/vanng822/go-premailer/premailer"
+	"github.com/vanng822/r2router"
 )
 
 func main() {
@@ -46,8 +47,10 @@ func main() {
 			if cssToAttributes == "false" {
 				options.CssToAttributes = false
 			}
-			pre := premailer.NewPremailerFromString(html, options)
-			result, _ = pre.Transform()
+			pre, err := premailer.NewPremailerFromString(html, options)
+			if err == nil {
+				result, _ = pre.Transform()
+			}
 		} else {
 			result = ""
 		}
