@@ -6,3 +6,6 @@ test_premailer:
 
 test_cmd-%:
 	cd cmd/$* && go test -v
+
+bench:
+	cd premailer && go test -bench=.

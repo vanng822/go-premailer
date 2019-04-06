@@ -25,8 +25,8 @@ func init() {
         	vertical-align: top;
         }
         h3 {
-		    text-align: right;
-		}
+		    	text-align: right;
+				}
         strong {
         	text-decoration:none
         }

@@ -7,7 +7,7 @@ Inline styling for html in golang
 [![GoDoc](https://godoc.org/github.com/vanng822/go-premailer/premailer?status.svg)](https://godoc.org/github.com/vanng822/go-premailer/premailer)
 
 # install
-	
+
 	go get github.com/vanng822/go-premailer/premailer
 
 # Example
@@ -17,19 +17,23 @@ Inline styling for html in golang
 		"github.com/vanng822/go-premailer/premailer"
 		"log"
 	)
-	
+
 	func main() {
-		prem := premailer.NewPremailerFromFile(inputFile, premailer.NewOptions())
-		html, err := prem.Transform()
+		prem, err := premailer.NewPremailerFromFile(inputFile, premailer.NewOptions())
 		if err != nil {
 			log.Fatal(err)
 		}
 		
+		html, err := prem.Transform()
+		if err != nil {
+			log.Fatal(err)
+		}
+
 		fmt.Println(html)
 	}
 
 ## Input
-	
+
 	<html>
 	<head>
 	<title>Title</title>
@@ -43,7 +47,7 @@ Inline styling for html in golang
 		<p><strong>Yes!</strong></p>
 	</body>
 	</html>
-	
+
 ## Output
 
 	<html>
@@ -56,25 +60,24 @@ Inline styling for html in golang
 	</body>
 	</html>
 
-	
+
 
 # Commandline
 
 	> go run main.go -i your_email.html
 	> go run main.go -i your_mail.html -o process_mail.html
-	
+
 # Demo
-	
+
 http://premailer.isgoodness.com/
-	
+
 # Conversion endpoint
 
 http://premailer.isgoodness.com/convert
-	
+
 	request POST:
 		html: your mail
 		cssToAttributes: true|false
 		removeClasses: true|false
 	response:
 		{result: output}
-	

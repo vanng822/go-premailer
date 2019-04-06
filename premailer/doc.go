@@ -7,7 +7,10 @@
 //	)
 //
 //	func main() {
-//		prem := premailer.NewPremailerFromFile(inputFile, premailer.NewOptions())
+//		prem, err := premailer.NewPremailerFromFile(inputFile, premailer.NewOptions())
+//    if err != nil {
+//      log.Fatal(err)
+//    }
 //		html, err := prem.Transform()
 //		if err != nil {
 //			log.Fatal(err)
