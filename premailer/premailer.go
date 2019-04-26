@@ -68,14 +68,14 @@ func (pr *premailer) sortRules() {
 				pr.leftover = append(pr.leftover, rule)
 				continue
 			}
-			normalStyles := make(map[string]*css.CSSStyleDeclaration)
-			importantStyles := make(map[string]*css.CSSStyleDeclaration)
+			normalStyles := make([]*css.CSSStyleDeclaration, 0)
+			importantStyles := make([]*css.CSSStyleDeclaration, 0)
 
-			for prop, s := range rule.Style.Styles {
+			for _, s := range rule.Style.Styles {
 				if s.Important == 1 {
-					importantStyles[prop] = s
+					importantStyles = append(importantStyles, s)
 				} else {
-					normalStyles[prop] = s
+					normalStyles = append(normalStyles, s)
 				}
 			}
 

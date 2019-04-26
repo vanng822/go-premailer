@@ -7,5 +7,5 @@ import (
 type styleRule struct {
 	specificity *specificity
 	selector    string
-	styles      map[string]*css.CSSStyleDeclaration
+	styles      []*css.CSSStyleDeclaration
 }

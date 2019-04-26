@@ -2,11 +2,13 @@ package premailer
 
 import (
 	"fmt"
+	"strings"
+
 	"github.com/PuerkitoBio/goquery"
 	"github.com/vanng822/css"
-	"sort"
-	"strings"
 )
+
+type void struct{}
 
 type elementRules struct {
 	element         *goquery.Selection
@@ -17,33 +19,53 @@ type elementRules struct {
 func (er *elementRules) inline() {
 	inline, _ := er.element.Attr("style")
 
-	var inlineStyles map[string]*css.CSSStyleDeclaration
+	inlineStyles := make([]*css.CSSStyleDeclaration, 0)
 	if inline != "" {
 		inlineStyles = css.ParseBlock(inline)
 	}
-
+	// we collect all occurences
+	orders := make([]string, 0)
 	styles := make(map[string]string)
 	for _, rule := range er.rules {
-		for prop, s := range rule.styles {
+		for _, s := range rule.styles {
+			prop := s.Property
 			styles[prop] = s.Value
+			orders = append(orders, prop)
 		}
 	}
 
 	if len(inlineStyles) > 0 {
-		for prop, s := range inlineStyles {
+		for _, s := range inlineStyles {
+			prop := s.Property
 			styles[prop] = s.Value
+			orders = append(orders, prop)
+		}
+	}
+
+	// now collect the order of property
+	// each prop will be unique and the last one
+	// should have the highest priority
+	// We could inline them all but this will make output cleaner
+	props := make([]string, 0)
+	seen := make(map[string]void)
+	for i := len(orders) - 1; i >= 0; i-- {
+		prop := orders[i]
+		if _, ok := seen[prop]; !ok {
+			seen[prop] = void{}
+			props = append(props, prop)
 		}
 	}
 
 	final := make([]string, 0, len(styles))
-	for p, v := range styles {
+	for i := len(props) - 1; i >= 0; i-- {
+		p := props[i]
+		v := styles[p]
 		final = append(final, fmt.Sprintf("%s:%s", p, v))
 		if er.cssToAttributes {
 			er.style_to_basic_html_attribute(p, v)
 		}
 	}
 
-	sort.Strings(final)
 	style := strings.Join(final, ";")
 	if style != "" {
 		er.element.SetAttr("style", style)

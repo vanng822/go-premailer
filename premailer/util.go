@@ -6,9 +6,9 @@ import (
 
 func copyRule(selector string, rule *css.CSSRule) *css.CSSRule {
 	// copy rule for each selector
-	styles := make(map[string]*css.CSSStyleDeclaration)
-	for prop, s := range rule.Style.Styles {
-		styles[prop] = css.NewCSSStyleDeclaration(s.Property, s.Value, s.Important)
+	styles := make([]*css.CSSStyleDeclaration, 0)
+	for _, s := range rule.Style.Styles {
+		styles = append(styles, css.NewCSSStyleDeclaration(s.Property, s.Value, s.Important))
 	}
 	copiedStyle := css.CSSStyleRule{SelectorText: selector, Styles: styles}
 	copiedRule := &css.CSSRule{Type: rule.Type, Style: copiedStyle}

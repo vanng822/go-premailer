@@ -43,7 +43,7 @@ func TestBasicHTML(t *testing.T) {
 	result_html, err := p.Transform()
 	assert.Nil(t, err)
 
-	assert.Contains(t, result_html, "<h1 style=\"color:red;width:50px\" width=\"50\">Hi!</h1>")
+	assert.Contains(t, result_html, "<h1 style=\"width:50px;color:red\" width=\"50\">Hi!</h1>")
 	assert.Contains(t, result_html, "<h2 style=\"vertical-align:top\" valign=\"top\">There</h2>")
 	assert.Contains(t, result_html, "<h3 style=\"text-align:right\" align=\"right\">Hello</h3>")
 	assert.Contains(t, result_html, "<p><strong style=\"text-decoration:none\">Yes!</strong></p>")
@@ -275,7 +275,7 @@ func TestWithMediaRule(t *testing.T) {
 	assert.Contains(t, result_html, "@media all and (min-width: 62em){")
 	assert.Contains(t, result_html, "font-size: 55px !important;")
 	assert.Contains(t, result_html, "line-height: 60px !important;")
-	assert.Contains(t, result_html, "padding-bottom: 5px !important;")
+	assert.Contains(t, result_html, "padding-bottom: 5px !important")
 	assert.Contains(t, result_html, "padding-top: 0 !important")
 }
 
