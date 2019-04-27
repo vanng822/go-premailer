@@ -108,6 +108,33 @@ func TestWithInline(t *testing.T) {
 	assert.NotContains(t, result_html, "<style type=\"text/css\">")
 }
 
+func TestWithZeroLength(t *testing.T) {
+	html := `<html>
+        <head>
+        <title>Title</title>
+        <style type="text/css">
+        h1, h2 {
+        	width: 0;
+					height: 0;
+        	color:red;
+        }
+        </style>
+        </head>
+        <body>
+        <h1>Hi!</h1>
+        <p><strong>Yes!</strong></p>
+        </body>
+        </html>`
+
+	p, err := NewPremailerFromString(html, nil)
+	assert.Nil(t, err)
+	result_html, err := p.Transform()
+	assert.Nil(t, err)
+
+	assert.Contains(t, result_html, "<h1 style=\"width:0;height:0;color:red\" width=\"0\" height=\"0\">Hi!</h1>")
+	assert.NotContains(t, result_html, "<style type=\"text/css\">")
+}
+
 func TestPseudoSelectors(t *testing.T) {
 	html := `<html>
         <head>

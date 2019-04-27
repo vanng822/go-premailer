@@ -87,6 +87,8 @@ func (er *elementRules) styleToBasicHtmlAttribute(prop, value string) {
 		if strings.HasSuffix(value, "px") {
 			value = value[:len(value)-2]
 			er.element.SetAttr(prop, value)
+		} else if value == "0" {
+			er.element.SetAttr(prop, value)
 		}
 	}
 }
