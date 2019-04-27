@@ -62,7 +62,7 @@ func (er *elementRules) inline() {
 		v := styles[p]
 		final = append(final, fmt.Sprintf("%s:%s", p, v))
 		if er.cssToAttributes {
-			er.style_to_basic_html_attribute(p, v)
+			er.styleToBasicHtmlAttribute(p, v)
 		}
 	}
 
@@ -73,7 +73,7 @@ func (er *elementRules) inline() {
 
 }
 
-func (er *elementRules) style_to_basic_html_attribute(prop, value string) {
+func (er *elementRules) styleToBasicHtmlAttribute(prop, value string) {
 	switch prop {
 	case "text-align":
 		er.element.SetAttr("align", value)
@@ -86,7 +86,7 @@ func (er *elementRules) style_to_basic_html_attribute(prop, value string) {
 	case "height":
 		if strings.HasSuffix(value, "px") {
 			value = value[:len(value)-2]
+			er.element.SetAttr(prop, value)
 		}
-		er.element.SetAttr(prop, value)
 	}
 }
