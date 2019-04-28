@@ -75,12 +75,6 @@ func (er *elementRules) inline() {
 
 func (er *elementRules) styleToBasicHtmlAttribute(prop, value string) {
 	switch prop {
-	case "text-align":
-		er.element.SetAttr("align", value)
-	case "vertical-align":
-		er.element.SetAttr("valign", value)
-	case "background-color":
-		er.element.SetAttr("bgcolor", value)
 	case "width":
 		fallthrough
 	case "height":

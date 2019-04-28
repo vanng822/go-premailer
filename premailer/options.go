@@ -1,7 +1,5 @@
 package premailer
 
-import ()
-
 // Options for controlling behaviour
 type Options struct {
 	// Remove class attribute from element
