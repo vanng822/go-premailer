@@ -23,7 +23,7 @@ func (er *elementRules) inline() {
 	if inline != "" {
 		inlineStyles = css.ParseBlock(inline)
 	}
-	// we collect all occurences
+	// we collect all occurrences
 	orders := make([]string, 0)
 	styles := make(map[string]string)
 	for _, rule := range er.rules {
