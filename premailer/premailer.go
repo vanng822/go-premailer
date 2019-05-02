@@ -166,7 +166,7 @@ func (pr *premailer) addLeftover() {
 		styleNode := &html.Node{}
 		styleNode.Type = html.ElementNode
 		styleNode.Data = "style"
-		styleNode.Attr = []html.Attribute{html.Attribute{Key: "type", Val: "text/css"}}
+		styleNode.Attr = []html.Attribute{{Key: "type", Val: "text/css"}}
 		cssNode := &html.Node{}
 		cssData := make([]string, 0, len(pr.leftover))
 		for _, rule := range pr.leftover {

@@ -98,13 +98,13 @@ func TestSpecificitySortRuleIndex(t *testing.T) {
 func TestSpecificitySortLongArray(t *testing.T) {
 	// It has to be longer than 6 due to internal implementation of sort.Sort(),
 	rules := []*styleRule{
-		&styleRule{specificity: makeSpecificity(0, 0, 1, "table.padded")},
-		&styleRule{specificity: makeSpecificity(0, 0, 2, "table.padded")},
-		&styleRule{specificity: makeSpecificity(0, 0, 3, "table.padded")},
-		&styleRule{specificity: makeSpecificity(0, 0, 4, "table.padded")},
-		&styleRule{specificity: makeSpecificity(0, 0, 5, "table.padded")},
-		&styleRule{specificity: makeSpecificity(0, 0, 6, "table.padded")},
-		&styleRule{specificity: makeSpecificity(0, 0, 11, "table")},
+		{specificity: makeSpecificity(0, 0, 1, "table.padded")},
+		{specificity: makeSpecificity(0, 0, 2, "table.padded")},
+		{specificity: makeSpecificity(0, 0, 3, "table.padded")},
+		{specificity: makeSpecificity(0, 0, 4, "table.padded")},
+		{specificity: makeSpecificity(0, 0, 5, "table.padded")},
+		{specificity: makeSpecificity(0, 0, 6, "table.padded")},
+		{specificity: makeSpecificity(0, 0, 11, "table")},
 	}
 
 	sort.Sort(bySpecificity(rules))
