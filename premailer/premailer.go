@@ -14,7 +14,7 @@ import (
 	"golang.org/x/net/html"
 )
 
-// Inteface of Premailer
+// Premailer is the inteface of Premailer
 type Premailer interface {
 	// Transform process and inlining css
 	// It start to collect the rules in the document style tags

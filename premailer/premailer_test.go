@@ -40,14 +40,14 @@ func TestBasicHTML(t *testing.T) {
 
 	p, err := NewPremailerFromString(html, nil)
 	assert.Nil(t, err)
-	result_html, err := p.Transform()
+	resultHTML, err := p.Transform()
 	assert.Nil(t, err)
 
-	assert.Contains(t, result_html, "<h1 style=\"width:50px;color:red\" width=\"50\">Hi!</h1>")
-	assert.Contains(t, result_html, "<h2 style=\"vertical-align:top\">There</h2>")
-	assert.Contains(t, result_html, "<h3 style=\"text-align:right\">Hello</h3>")
-	assert.Contains(t, result_html, "<p><strong style=\"text-decoration:none\">Yes!</strong></p>")
-	assert.Contains(t, result_html, "<div style=\"background-color:green\">Green color</div>")
+	assert.Contains(t, resultHTML, "<h1 style=\"width:50px;color:red\" width=\"50\">Hi!</h1>")
+	assert.Contains(t, resultHTML, "<h2 style=\"vertical-align:top\">There</h2>")
+	assert.Contains(t, resultHTML, "<h3 style=\"text-align:right\">Hello</h3>")
+	assert.Contains(t, resultHTML, "<p><strong style=\"text-decoration:none\">Yes!</strong></p>")
+	assert.Contains(t, resultHTML, "<div style=\"background-color:green\">Green color</div>")
 }
 
 func TestDataPremailerIgnore(t *testing.T) {
@@ -71,11 +71,11 @@ func TestDataPremailerIgnore(t *testing.T) {
 
 	p, err := NewPremailerFromString(html, nil)
 	assert.Nil(t, err)
-	result_html, err := p.Transform()
+	resultHTML, err := p.Transform()
 	assert.Nil(t, err)
 
-	assert.Contains(t, result_html, "<h1>Hi!</h1>")
-	assert.Contains(t, result_html, "<p><strong>Yes!</strong></p>")
+	assert.Contains(t, resultHTML, "<h1>Hi!</h1>")
+	assert.Contains(t, resultHTML, "<p><strong>Yes!</strong></p>")
 }
 
 func TestWithInline(t *testing.T) {
@@ -100,12 +100,12 @@ func TestWithInline(t *testing.T) {
 
 	p, err := NewPremailerFromString(html, nil)
 	assert.Nil(t, err)
-	result_html, err := p.Transform()
+	resultHTML, err := p.Transform()
 	assert.Nil(t, err)
 
-	assert.Contains(t, result_html, "<h1 style=\"color:red;width:100px\" width=\"100\">Hi!</h1>")
-	assert.Contains(t, result_html, "<p><strong style=\"text-decoration:none\">Yes!</strong></p>")
-	assert.NotContains(t, result_html, "<style type=\"text/css\">")
+	assert.Contains(t, resultHTML, "<h1 style=\"color:red;width:100px\" width=\"100\">Hi!</h1>")
+	assert.Contains(t, resultHTML, "<p><strong style=\"text-decoration:none\">Yes!</strong></p>")
+	assert.NotContains(t, resultHTML, "<style type=\"text/css\">")
 }
 
 func TestWithZeroLength(t *testing.T) {
@@ -128,11 +128,11 @@ func TestWithZeroLength(t *testing.T) {
 
 	p, err := NewPremailerFromString(html, nil)
 	assert.Nil(t, err)
-	result_html, err := p.Transform()
+	resultHTML, err := p.Transform()
 	assert.Nil(t, err)
 
-	assert.Contains(t, result_html, "<h1 style=\"width:0;height:0;color:red\" width=\"0\" height=\"0\">Hi!</h1>")
-	assert.NotContains(t, result_html, "<style type=\"text/css\">")
+	assert.Contains(t, resultHTML, "<h1 style=\"width:0;height:0;color:red\" width=\"0\" height=\"0\">Hi!</h1>")
+	assert.NotContains(t, resultHTML, "<style type=\"text/css\">")
 }
 
 func TestPseudoSelectors(t *testing.T) {
@@ -160,11 +160,11 @@ func TestPseudoSelectors(t *testing.T) {
 
 	p, err := NewPremailerFromString(html, nil)
 	assert.Nil(t, err)
-	result_html, err := p.Transform()
+	resultHTML, err := p.Transform()
 	assert.Nil(t, err)
 
-	assert.Contains(t, result_html, "<a href=\"/home\" style=\"color:green\">Yes!</a>")
-	assert.Contains(t, result_html, "<style type=\"text/css\">")
+	assert.Contains(t, resultHTML, "<a href=\"/home\" style=\"color:green\">Yes!</a>")
+	assert.Contains(t, resultHTML, "<style type=\"text/css\">")
 }
 
 func TestRemoveClass(t *testing.T) {
@@ -191,11 +191,11 @@ func TestRemoveClass(t *testing.T) {
 	options.RemoveClasses = true
 	p, err := NewPremailerFromString(html, options)
 	assert.Nil(t, err)
-	result_html, err := p.Transform()
+	resultHTML, err := p.Transform()
 	assert.Nil(t, err)
 
-	assert.Contains(t, result_html, "<h1 style=\"color:red;font-size:40px;width:150px\">Hi!</h1>")
-	assert.Contains(t, result_html, "<p><strong>Yes!</strong></p>")
+	assert.Contains(t, resultHTML, "<h1 style=\"color:red;font-size:40px;width:150px\">Hi!</h1>")
+	assert.Contains(t, resultHTML, "<p><strong>Yes!</strong></p>")
 }
 
 func TestCssToAttributesFalse(t *testing.T) {
@@ -221,11 +221,11 @@ func TestCssToAttributesFalse(t *testing.T) {
 	options.CssToAttributes = false
 	p, err := NewPremailerFromString(html, options)
 	assert.Nil(t, err)
-	result_html, err := p.Transform()
+	resultHTML, err := p.Transform()
 	assert.Nil(t, err)
 
-	assert.Contains(t, result_html, "<h1 class=\"wide\" style=\"color:red;width:1000px\">Hi!</h1>")
-	assert.Contains(t, result_html, "<p><strong>Yes!</strong></p>")
+	assert.Contains(t, resultHTML, "<h1 class=\"wide\" style=\"color:red;width:1000px\">Hi!</h1>")
+	assert.Contains(t, resultHTML, "<p><strong>Yes!</strong></p>")
 }
 
 func TestWithImportant(t *testing.T) {
@@ -253,11 +253,11 @@ func TestWithImportant(t *testing.T) {
 
 	p, err := NewPremailerFromString(html, NewOptions())
 	assert.Nil(t, err)
-	result_html, err := p.Transform()
+	resultHTML, err := p.Transform()
 	assert.Nil(t, err)
 
-	assert.Contains(t, result_html, "<h1 style=\"color:red\">Hi!</h1>")
-	assert.Contains(t, result_html, "<p class=\"wide\" style=\"color:blue;width:100px\" width=\"100\"><strong>Yes!</strong></p>")
+	assert.Contains(t, resultHTML, "<h1 style=\"color:red\">Hi!</h1>")
+	assert.Contains(t, resultHTML, "<p class=\"wide\" style=\"color:blue;width:100px\" width=\"100\"><strong>Yes!</strong></p>")
 }
 
 func TestWithMediaRule(t *testing.T) {
@@ -293,17 +293,17 @@ func TestWithMediaRule(t *testing.T) {
 
 	p, err := NewPremailerFromString(html, NewOptions())
 	assert.Nil(t, err)
-	result_html, err := p.Transform()
+	resultHTML, err := p.Transform()
 	assert.Nil(t, err)
 
-	assert.Contains(t, result_html, "<h1 style=\"color:red\">Hi!</h1>")
-	assert.Contains(t, result_html, "<p class=\"wide\" style=\"color:blue;width:100px\" width=\"100\"><strong>Yes!</strong></p>")
+	assert.Contains(t, resultHTML, "<h1 style=\"color:red\">Hi!</h1>")
+	assert.Contains(t, resultHTML, "<p class=\"wide\" style=\"color:blue;width:100px\" width=\"100\"><strong>Yes!</strong></p>")
 
-	assert.Contains(t, result_html, "@media all and (min-width: 62em){")
-	assert.Contains(t, result_html, "font-size: 55px !important;")
-	assert.Contains(t, result_html, "line-height: 60px !important;")
-	assert.Contains(t, result_html, "padding-bottom: 5px !important")
-	assert.Contains(t, result_html, "padding-top: 0 !important")
+	assert.Contains(t, resultHTML, "@media all and (min-width: 62em){")
+	assert.Contains(t, resultHTML, "font-size: 55px !important;")
+	assert.Contains(t, resultHTML, "line-height: 60px !important;")
+	assert.Contains(t, resultHTML, "padding-bottom: 5px !important")
+	assert.Contains(t, resultHTML, "padding-top: 0 !important")
 }
 
 func TestWithMediaAttribute(t *testing.T) {
@@ -348,21 +348,21 @@ func TestWithMediaAttribute(t *testing.T) {
 
 	p, err := NewPremailerFromString(html, NewOptions())
 	assert.Nil(t, err)
-	result_html, err := p.Transform()
+	resultHTML, err := p.Transform()
 	assert.Nil(t, err)
 
-	assert.Contains(t, result_html, "<h1 style=\"color:red\">Hi!</h1>")
-	assert.Contains(t, result_html, "<p class=\"wide\" style=\"color:blue;width:100px\" width=\"100\"><strong>Yes!</strong></p>")
-	assert.Contains(t, result_html, "<h3 style=\"color:black\">Hi, all media style!</h3>")
+	assert.Contains(t, resultHTML, "<h1 style=\"color:red\">Hi!</h1>")
+	assert.Contains(t, resultHTML, "<p class=\"wide\" style=\"color:blue;width:100px\" width=\"100\"><strong>Yes!</strong></p>")
+	assert.Contains(t, resultHTML, "<h3 style=\"color:black\">Hi, all media style!</h3>")
 
-	assert.Contains(t, result_html, "<style type=\"text/css\" media=\"all and (min-width: 62em)\">")
-	assert.Contains(t, result_html, "font-size: 55px;")
-	assert.Contains(t, result_html, "line-height: 60px;")
-	assert.Contains(t, result_html, "padding-top: 0;")
-	assert.Contains(t, result_html, "padding-bottom: 5px")
+	assert.Contains(t, resultHTML, "<style type=\"text/css\" media=\"all and (min-width: 62em)\">")
+	assert.Contains(t, resultHTML, "font-size: 55px;")
+	assert.Contains(t, resultHTML, "line-height: 60px;")
+	assert.Contains(t, resultHTML, "padding-top: 0;")
+	assert.Contains(t, resultHTML, "padding-bottom: 5px")
 
-	assert.NotContains(t, result_html, "<style type=\"text/css\" media=\"all\">")
-	assert.NotContains(t, result_html, "color: black;")
+	assert.NotContains(t, resultHTML, "<style type=\"text/css\" media=\"all\">")
+	assert.NotContains(t, resultHTML, "color: black;")
 }
 
 func TestIndexOutOfRange(t *testing.T) {
@@ -403,17 +403,17 @@ func TestIndexOutOfRange(t *testing.T) {
 
 	p, err := NewPremailerFromString(html, NewOptions())
 	assert.Nil(t, err)
-	result_html, err := p.Transform()
+	resultHTML, err := p.Transform()
 	assert.Nil(t, err)
 
-	assert.Contains(t, result_html, "<h1 style=\"color:red\">Hi!</h1>")
-	assert.Contains(t, result_html, "<p class=\"wide\" style=\"color:blue;width:100px\" width=\"100\"><strong>Yes!</strong></p>")
+	assert.Contains(t, resultHTML, "<h1 style=\"color:red\">Hi!</h1>")
+	assert.Contains(t, resultHTML, "<p class=\"wide\" style=\"color:blue;width:100px\" width=\"100\"><strong>Yes!</strong></p>")
 
-	assert.Contains(t, result_html, "<style type=\"text/css\" media=\"all and (min-width: 62em)\">")
-	assert.Contains(t, result_html, "font-size: 55px;")
-	assert.Contains(t, result_html, "line-height: 60px;")
-	assert.Contains(t, result_html, "padding-top: 0;")
-	assert.Contains(t, result_html, "padding-bottom: 5px")
+	assert.Contains(t, resultHTML, "<style type=\"text/css\" media=\"all and (min-width: 62em)\">")
+	assert.Contains(t, resultHTML, "font-size: 55px;")
+	assert.Contains(t, resultHTML, "line-height: 60px;")
+	assert.Contains(t, resultHTML, "padding-top: 0;")
+	assert.Contains(t, resultHTML, "padding-bottom: 5px")
 }
 
 func TestSpecificity(t *testing.T) {
@@ -446,9 +446,9 @@ func TestSpecificity(t *testing.T) {
 
 	p, err := NewPremailerFromString(html, NewOptions())
 	assert.Nil(t, err)
-	result_html, err := p.Transform()
+	resultHTML, err := p.Transform()
 	assert.Nil(t, err)
 
-	assert.Contains(t, result_html, `<tr><td style="padding:5px">1</td></tr>`)
-	assert.Contains(t, result_html, `<tr><td class="bar-area" style="padding:10px">2</td></tr>`)
+	assert.Contains(t, resultHTML, `<tr><td style="padding:5px">1</td></tr>`)
+	assert.Contains(t, resultHTML, `<tr><td class="bar-area" style="padding:10px">2</td></tr>`)
 }

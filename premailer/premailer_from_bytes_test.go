@@ -40,12 +40,12 @@ func TestPremailerBasicHTMLBytes(t *testing.T) {
 
 	p, err := NewPremailerFromBytes(html, nil)
 	assert.Nil(t, err)
-	result_html, err := p.Transform()
+	resultHTML, err := p.Transform()
 	assert.Nil(t, err)
 
-	assert.Contains(t, result_html, "<h1 style=\"width:50px;color:red\" width=\"50\">Hi!</h1>")
-	assert.Contains(t, result_html, "<h2 style=\"vertical-align:top\">There</h2>")
-	assert.Contains(t, result_html, "<h3 style=\"text-align:right\">Hello</h3>")
-	assert.Contains(t, result_html, "<p><strong style=\"text-decoration:none\">Yes!</strong></p>")
-	assert.Contains(t, result_html, "<div style=\"background-color:green\">Green color</div>")
+	assert.Contains(t, resultHTML, "<h1 style=\"width:50px;color:red\" width=\"50\">Hi!</h1>")
+	assert.Contains(t, resultHTML, "<h2 style=\"vertical-align:top\">There</h2>")
+	assert.Contains(t, resultHTML, "<h3 style=\"text-align:right\">Hello</h3>")
+	assert.Contains(t, resultHTML, "<p><strong style=\"text-decoration:none\">Yes!</strong></p>")
+	assert.Contains(t, resultHTML, "<div style=\"background-color:green\">Green color</div>")
 }
