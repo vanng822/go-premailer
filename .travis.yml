@@ -20,6 +20,7 @@ install:
  - go get github.com/PuerkitoBio/goquery
  - go get golang.org/x/net/html
  - go get github.com/stretchr/testify/assert
+ - go get github.com/fzipp/gocyclo
 
 script:
   - make gocyclo_all test
