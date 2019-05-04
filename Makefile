@@ -7,5 +7,11 @@ test_premailer:
 test_cmd-%:
 	cd cmd/$* && go test -v -cover
 
+gocyclo_all:
+	make -j gocyclo-premailer gocyclo-cmd-script gocyclo-cmd-server
+
+gocyclo-%:
+	gocyclo -avg -over 15 $(subst -,/,$*)
+
 bench:
 	cd premailer && go test -bench=.
