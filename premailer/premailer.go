@@ -133,7 +133,12 @@ func (pr *premailer) collectElements() {
 				s.SetAttr(pr.elIdAttr, id)
 				rules := make([]*styleRule, 0)
 				rules = append(rules, rule)
-				pr.elements[id] = &elementRules{element: s, rules: rules, cssToAttributes: pr.options.CssToAttributes}
+				pr.elements[id] = &elementRules{
+					element: s,
+					rules: rules,
+					cssToAttributes: pr.options.CssToAttributes,
+					keepBangImportant: pr.options.KeepBangImportant,
+				}
 				pr.elementId += 1
 			}
 		})

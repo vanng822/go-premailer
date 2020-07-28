@@ -14,6 +14,7 @@ type elementRules struct {
 	element         *goquery.Selection
 	rules           []*styleRule
 	cssToAttributes bool
+	keepBangImportant bool
 }
 
 func (er *elementRules) inline() {
@@ -30,6 +31,9 @@ func (er *elementRules) inline() {
 		for _, s := range rule.styles {
 			prop := s.Property
 			styles[prop] = s.Value
+			if er.keepBangImportant && s.Important == 1 {
+				styles[prop] += " !important"
+			}
 			orders = append(orders, prop)
 		}
 	}
@@ -78,6 +82,11 @@ func (er *elementRules) styleToBasicHtmlAttribute(prop, value string) {
 	case "width":
 		fallthrough
 	case "height":
+		// If we are keeping "!important" in our styles, we need to strip it out
+		// here so that the proper px value can be parsed
+		if er.keepBangImportant {
+			value = strings.Replace(value, " !important", "", 1)
+		}
 		if strings.HasSuffix(value, "px") {
 			value = value[:len(value)-2]
 			er.element.SetAttr(prop, value)
