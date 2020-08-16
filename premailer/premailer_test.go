@@ -260,6 +260,43 @@ func TestWithImportant(t *testing.T) {
 	assert.Contains(t, resultHTML, "<p class=\"wide\" style=\"color:blue;width:100px\" width=\"100\"><strong>Yes!</strong></p>")
 }
 
+
+func TestWithKeepImportant(t *testing.T) {
+	html := `<html>
+        <head>
+        <title>Title</title>
+        <style type="text/css">
+        h1, h2 {
+        	color:red;
+        }
+        p {
+        	width: 100px !important;
+        	color: blue
+        }
+        .wide {
+        	width: 1000px;
+        }		
+        </style>
+        </head>
+        <body>
+        <h1>Hi!</h1>
+        <p class="wide"><strong>Yes!</strong></p>
+        </body>
+        </html>`
+
+	options := NewOptions()
+	options.KeepBangImportant = true
+	p, err := NewPremailerFromString(html, options)
+	assert.Nil(t, err)
+	resultHTML, err := p.Transform()
+	assert.Nil(t, err)
+
+	assert.Contains(t, resultHTML, "<h1 style=\"color:red\">Hi!</h1>")
+	assert.Contains(t, resultHTML, "<p class=\"wide\" style=\"color:blue;width:100px !important\" width=\"100\"><strong>Yes!</strong></p>")
+
+}
+
+
 func TestWithMediaRule(t *testing.T) {
 	html := `<html>
         <head>
