@@ -11,9 +11,9 @@ import (
 type void struct{}
 
 type elementRules struct {
-	element         *goquery.Selection
-	rules           []*styleRule
-	cssToAttributes bool
+	element           *goquery.Selection
+	rules             []*styleRule
+	cssToAttributes   bool
 	keepBangImportant bool
 }
 
@@ -30,8 +30,8 @@ func (er *elementRules) inline() {
 	for _, rule := range er.rules {
 		for _, s := range rule.styles {
 			prop := s.Property
-			styles[prop] = s.Value
-			if er.keepBangImportant && s.Important == 1 {
+			styles[prop] = s.Value.Text()
+			if er.keepBangImportant && s.Important {
 				styles[prop] += " !important"
 			}
 			orders = append(orders, prop)
@@ -41,7 +41,7 @@ func (er *elementRules) inline() {
 	if len(inlineStyles) > 0 {
 		for _, s := range inlineStyles {
 			prop := s.Property
-			styles[prop] = s.Value
+			styles[prop] = s.Value.Text()
 			orders = append(orders, prop)
 		}
 	}
