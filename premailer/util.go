@@ -10,7 +10,7 @@ func copyRule(selector string, rule *css.CSSRule) *css.CSSRule {
 	for _, s := range rule.Style.Styles {
 		styles = append(styles, css.NewCSSStyleDeclaration(s.Property, s.Value.Text(), s.Important))
 	}
-	copiedStyle := css.CSSStyleRule{Selector: css.NewCSSValueString(selector), Styles: styles}
+	copiedStyle := css.CSSStyleRule{Selector: css.NewCSSValue(selector), Styles: styles}
 	copiedRule := &css.CSSRule{Type: rule.Type, Style: copiedStyle}
 	return copiedRule
 }

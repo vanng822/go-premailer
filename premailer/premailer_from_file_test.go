@@ -19,6 +19,16 @@ func TestBasicHTMLFromFile(t *testing.T) {
 	assert.Contains(t, resultHTML, "<div style=\"background-color:green\">Green color</div>")
 }
 
+func TestLeftoverCssRules(t *testing.T) {
+	p, err := NewPremailerFromFile("data/leftover_test.html", nil)
+	assert.Nil(t, err)
+	resultHTML, err := p.Transform()
+	assert.Nil(t, err)
+
+	assert.Contains(t, resultHTML, "<div class=\"a\" style=\"background-color:red;padding:10px\">Hover me!</div>")
+	assert.Contains(t, resultHTML, "<style type=\"text/css\">.a:hover {\nbackground-color: green !important\n}</style>")
+}
+
 func TestFromFileNotFound(t *testing.T) {
 	p, err := NewPremailerFromFile("data/blablabla.html", nil)
 	assert.NotNil(t, err)
