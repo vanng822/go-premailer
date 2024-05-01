@@ -3,9 +3,7 @@
 Inline styling for HTML mail in golang
 
 # Document
-[![Build Status](https://travis-ci.org/vanng822/go-premailer.svg?branch=master)](https://travis-ci.org/vanng822/go-premailer)
 [![GoDoc](https://godoc.org/github.com/vanng822/go-premailer/premailer?status.svg)](https://godoc.org/github.com/vanng822/go-premailer/premailer)
-[![GoCover](http://gocover.io/_badge/github.com/vanng822/go-premailer/premailer)](http://gocover.io/github.com/vanng822/go-premailer/premailer)
 [![Go Report Card](https://goreportcard.com/badge/github.com/vanng822/go-premailer)](https://goreportcard.com/report/github.com/vanng822/go-premailer)
 
 # install
@@ -68,18 +66,3 @@ Inline styling for HTML mail in golang
 
 	> go run main.go -i your_email.html
 	> go run main.go -i your_mail.html -o process_mail.html
-
-# Demo
-
-http://premailer.isgoodness.com/
-
-# Conversion endpoint
-
-http://premailer.isgoodness.com/convert
-
-	request POST:
-		html: your mail
-		cssToAttributes: true|false
-		removeClasses: true|false
-	response:
-		{result: output}
