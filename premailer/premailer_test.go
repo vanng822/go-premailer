@@ -260,7 +260,6 @@ func TestWithImportant(t *testing.T) {
 	assert.Contains(t, resultHTML, "<p class=\"wide\" style=\"color:blue;width:100px\" width=\"100\"><strong>Yes!</strong></p>")
 }
 
-
 func TestWithKeepImportant(t *testing.T) {
 	html := `<html>
         <head>
@@ -295,7 +294,6 @@ func TestWithKeepImportant(t *testing.T) {
 	assert.Contains(t, resultHTML, "<p class=\"wide\" style=\"color:blue;width:100px !important\" width=\"100\"><strong>Yes!</strong></p>")
 
 }
-
 
 func TestWithMediaRule(t *testing.T) {
 	html := `<html>
@@ -490,12 +488,12 @@ func TestSpecificity(t *testing.T) {
 	assert.Contains(t, resultHTML, `<tr><td class="bar-area" style="padding:10px">2</td></tr>`)
 }
 
-func TestRetainsComments(t *testing.T) {
+func TestRetainsMsoConditionalComment(t *testing.T) {
 	html := `<html>
 	<head>
 	</head>
 	<body>
-	<!-- Comment containing brackets < > -->
+	<!--[if mso]><style>.body {font-size: 16px;}</style><![endif]-->
 	</body>
 	</html>`
 
@@ -504,5 +502,5 @@ func TestRetainsComments(t *testing.T) {
 	resultHTML, err := p.Transform()
 	assert.Nil(t, err)
 
-	assert.Contains(t, resultHTML, `<!-- Comment containing brackets < > -->`)
+	assert.Contains(t, resultHTML, `<!--[if mso]><style>.body {font-size: 16px;}</style><![endif]-->`)
 }
