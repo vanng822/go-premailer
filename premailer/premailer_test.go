@@ -504,3 +504,20 @@ func TestRetainsMsoConditionalComment(t *testing.T) {
 
 	assert.Contains(t, resultHTML, `<!--[if mso]><style>.body {font-size: 16px;}</style><![endif]-->`)
 }
+
+func TestRetainsComments(t *testing.T) {
+	html := `<html>
+	<head>
+	</head>
+	<body>
+	<!-- Comment containing brackets < > -->
+	</body>
+	</html>`
+
+	p, err := NewPremailerFromString(html, NewOptions())
+	assert.Nil(t, err)
+	resultHTML, err := p.Transform()
+	assert.Nil(t, err)
+
+	assert.Contains(t, resultHTML, `<!-- Comment containing brackets < > -->`)
+}
