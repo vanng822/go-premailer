@@ -488,6 +488,23 @@ func TestSpecificity(t *testing.T) {
 	assert.Contains(t, resultHTML, `<tr><td class="bar-area" style="padding:10px">2</td></tr>`)
 }
 
+func TestRetainsMsoConditionalComment(t *testing.T) {
+	html := `<html>
+	<head>
+	</head>
+	<body>
+	<!--[if mso]><style>.body {font-size: 16px;}</style><![endif]-->
+	</body>
+	</html>`
+
+	p, err := NewPremailerFromString(html, NewOptions())
+	assert.Nil(t, err)
+	resultHTML, err := p.Transform()
+	assert.Nil(t, err)
+
+	assert.Contains(t, resultHTML, `<!--[if mso]><style>.body {font-size: 16px;}</style><![endif]-->`)
+}
+
 func TestRetainsComments(t *testing.T) {
 	html := `<html>
 	<head>
