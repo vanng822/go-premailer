@@ -18,8 +18,18 @@ jobs:
       with:
         go-version: 1.18
 
+    - name: Install gocyclo
+      run: |
+        export PATH=$PATH:$(go env GOPATH)/bin
+        go install github.com/fzipp/gocyclo/cmd/gocyclo@latest
+
     - name: Build
       run: go build -v ./...
 
     - name: Test
-      run: go test -v ./...
+      run: make test
+    
+    - name: Run gocyclo
+      run: |
+        export PATH=$PATH:$(go env GOPATH)/bin
+        make gocyclo_all
