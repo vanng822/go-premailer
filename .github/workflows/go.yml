@@ -20,8 +20,8 @@ jobs:
 
     - name: Install gocyclo
       run: |
-      export PATH=$PATH:$(go env GOPATH)/bin
-      go get github.com/fzipp/gocyclo
+        export PATH=$PATH:$(go env GOPATH)/bin
+        go get github.com/fzipp/gocyclo
 
     - name: Build
       run: go build -v ./...
