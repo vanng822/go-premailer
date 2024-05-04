@@ -19,7 +19,9 @@ jobs:
         go-version: 1.18
 
     - name: Install gocyclo
-      run: go get github.com/fzipp/gocyclo
+      run: |
+      export PATH=$PATH:$(go env GOPATH)/bin
+      go get github.com/fzipp/gocyclo
 
     - name: Build
       run: go build -v ./...
