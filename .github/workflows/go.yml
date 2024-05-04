@@ -18,8 +18,14 @@ jobs:
       with:
         go-version: 1.18
 
+    - name: Install gocyclo
+      run: go get github.com/fzipp/gocyclo
+
     - name: Build
       run: go build -v ./...
 
     - name: Test
-      run: go test -v ./...
+      run: make test
+    
+    - name: Run gocyclo
+      run: make gocyclo_all
