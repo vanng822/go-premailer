@@ -112,12 +112,12 @@ func (pr *premailer) collectRules() {
 		}
 		wg.Add(1)
 		pr.allRules = append(pr.allRules, nil)
-		go func(ruleSetIndex int) {
+		go func(ruleSetIndex int, selection *goquery.Selection) {
 			defer wg.Done()
-			ss := css.Parse(s.Text())
+			ss := css.Parse(selection.Text())
 			pr.allRules[ruleSetIndex] = ss.GetCSSRuleList()
-			s.ReplaceWithHtml("")
-		}(len(pr.allRules) - 1)
+			selection.ReplaceWithHtml("")
+		}(len(pr.allRules)-1, s)
 	})
 	wg.Wait()
 
