@@ -2,8 +2,6 @@ module github.com/vanng822/go-premailer
 
 go 1.24
 
-toolchain go1.24.1
-
 require (
 	github.com/PuerkitoBio/goquery v1.10.2
 	github.com/stretchr/testify v1.10.0
