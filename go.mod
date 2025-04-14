@@ -5,12 +5,12 @@ go 1.23.0
 toolchain go1.23.7
 
 require (
-	github.com/PuerkitoBio/goquery v1.10.2
+	github.com/PuerkitoBio/goquery v1.10.3
 	github.com/stretchr/testify v1.10.0
 	github.com/unrolled/render v1.7.0
 	github.com/vanng822/css v1.0.1
 	github.com/vanng822/r2router v0.0.0-20150523112421-1023140a4f30
-	golang.org/x/net v0.37.0
+	golang.org/x/net v0.39.0
 )
 
 require (
@@ -19,6 +19,6 @@ require (
 	github.com/fsnotify/fsnotify v1.6.0 // indirect
 	github.com/gorilla/css v1.0.1 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
-	golang.org/x/sys v0.31.0 // indirect
+	golang.org/x/sys v0.32.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
