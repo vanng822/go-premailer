@@ -188,6 +188,9 @@ func (pr *premailer) addLeftover() {
 }
 
 func (pr *premailer) makeUnsafeRawTextNode() {
+	if !pr.options.UnescapedTextNode {
+		return
+	}
 	s := pr.doc
 	if len(s.Nodes) > 0 {
 		makeUnsafeTextNode(s.Nodes[0])
@@ -207,9 +210,7 @@ func (pr *premailer) Transform() (string, error) {
 		pr.collectElements()
 		pr.applyInline()
 		pr.addLeftover()
-		if pr.options.UnescapedTextNode {
-			pr.makeUnsafeRawTextNode()
-		}
+		pr.makeUnsafeRawTextNode()
 		pr.processed = true
 	}
 	return pr.doc.Html()
