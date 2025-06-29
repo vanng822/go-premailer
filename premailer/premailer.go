@@ -187,6 +187,13 @@ func (pr *premailer) addLeftover() {
 	}
 }
 
+func (pr *premailer) makeUnsafeRawTextNode() {
+	s := pr.doc
+	if len(s.Nodes) > 0 {
+		makeUnsafeRawTextNode(s.Nodes[0])
+	}
+}
+
 // Transform process and inlining css
 // It start to collect the rules in the document style tags
 // Calculate specificity and sort the rules based on that
@@ -206,21 +213,4 @@ func (pr *premailer) Transform() (string, error) {
 		pr.processed = true
 	}
 	return pr.doc.Html()
-}
-
-func (pr *premailer) makeUnsafeRawTextNode() {
-	s := pr.doc
-	if len(s.Nodes) > 0 {
-		makeUnsafeRawTextNode(s.Nodes[0])
-	}
-}
-
-func makeUnsafeRawTextNode(s *html.Node) {
-	for c := s.FirstChild; c != nil; c = c.NextSibling {
-		if c.Type == html.TextNode {
-			c.Type = html.RawNode
-			continue
-		}
-		makeUnsafeRawTextNode(c)
-	}
 }

@@ -2,6 +2,7 @@ package premailer
 
 import (
 	"github.com/vanng822/css"
+	"golang.org/x/net/html"
 )
 
 func copyRule(selector string, rule *css.CSSRule) *css.CSSRule {
@@ -21,4 +22,14 @@ func makeRuleImportant(rule *css.CSSRule) string {
 		s.Important = true
 	}
 	return rule.Style.Text()
+}
+
+func makeUnsafeRawTextNode(s *html.Node) {
+	for c := s.FirstChild; c != nil; c = c.NextSibling {
+		if c.Type == html.TextNode {
+			c.Type = html.RawNode
+			continue
+		}
+		makeUnsafeRawTextNode(c)
+	}
 }
