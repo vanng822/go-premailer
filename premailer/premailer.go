@@ -190,7 +190,7 @@ func (pr *premailer) addLeftover() {
 func (pr *premailer) makeUnsafeRawTextNode() {
 	s := pr.doc
 	if len(s.Nodes) > 0 {
-		makeUnsafeRawTextNode(s.Nodes[0])
+		makeUnsafeTextNode(s.Nodes[0])
 	}
 }
 

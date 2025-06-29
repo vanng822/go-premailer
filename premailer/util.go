@@ -24,12 +24,12 @@ func makeRuleImportant(rule *css.CSSRule) string {
 	return rule.Style.Text()
 }
 
-func makeUnsafeRawTextNode(s *html.Node) {
+func makeUnsafeTextNode(s *html.Node) {
 	for c := s.FirstChild; c != nil; c = c.NextSibling {
 		if c.Type == html.TextNode {
 			c.Type = html.RawNode
 			continue
 		}
-		makeUnsafeRawTextNode(c)
+		makeUnsafeTextNode(c)
 	}
 }
