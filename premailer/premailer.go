@@ -191,9 +191,8 @@ func (pr *premailer) makeUnsafeRawTextNode() {
 	if !pr.options.UnescapedTextNode {
 		return
 	}
-	s := pr.doc
-	if len(s.Nodes) > 0 {
-		makeUnsafeTextNode(s.Nodes[0])
+	if len(pr.doc.Nodes) > 0 {
+		makeUnsafeTextNode(pr.doc.Nodes[0])
 	}
 }
 
