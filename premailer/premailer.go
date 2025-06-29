@@ -200,7 +200,27 @@ func (pr *premailer) Transform() (string, error) {
 		pr.collectElements()
 		pr.applyInline()
 		pr.addLeftover()
+		if pr.options.UnescapedTextNode {
+			pr.makeUnsafeRawTextNode()
+		}
 		pr.processed = true
 	}
 	return pr.doc.Html()
+}
+
+func (pr *premailer) makeUnsafeRawTextNode() {
+	s := pr.doc
+	if len(s.Nodes) > 0 {
+		makeUnsafeRawTextNode(s.Nodes[0])
+	}
+}
+
+func makeUnsafeRawTextNode(s *html.Node) {
+	for c := s.FirstChild; c != nil; c = c.NextSibling {
+		if c.Type == html.TextNode {
+			c.Type = html.RawNode
+			continue
+		}
+		makeUnsafeRawTextNode(c)
+	}
 }

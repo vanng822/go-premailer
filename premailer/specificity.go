@@ -25,7 +25,7 @@ func (s *specificity) importantOrders() []int {
 		s.ruleIndex}
 }
 
-var typeSelectorRegex = regexp.MustCompile("(^|\\s)\\w")
+var typeSelectorRegex = regexp.MustCompile(`(^|\\s)\\w`)
 
 func makeSpecificity(important, ruleSetIndex, ruleIndex int, selector string) *specificity {
 	spec := specificity{}

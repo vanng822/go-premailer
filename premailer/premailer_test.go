@@ -521,3 +521,34 @@ func TestRetainsComments(t *testing.T) {
 
 	assert.Contains(t, resultHTML, `<!-- Comment containing brackets < > -->`)
 }
+
+func TestRetainsLinkText(t *testing.T) {
+	htmlString := `<!DOCTYPE html><html><head>
+		<style>
+		p { color: red; font-size: 14px; font-family: 'Arial'; }
+		.header { background-color: blue; }
+		</style>
+	</head>
+	<body>
+		<p>This is a test paragraph & more</p>
+		<a href="https://example.com?a=1&b=2">
+			Click https://example.com?a=1&b=2
+		</a>
+		<div class="header">
+			<div>Header Content & more</div>
+		</div>
+	</body></html>`
+
+	options := NewOptions()
+	options.UnescapedTextNode = true
+
+	p, err := NewPremailerFromString(htmlString, options)
+	assert.Nil(t, err)
+	resultHTML, err := p.Transform()
+	assert.Nil(t, err)
+
+	assert.Contains(t, resultHTML, `Click https://example.com?a=1&b=2`)
+	assert.Contains(t, resultHTML, `https://example.com?a=1&amp;b=2`)
+	assert.Contains(t, resultHTML, `This is a test paragraph & more`)
+	assert.Contains(t, resultHTML, `Header Content & more`)
+}
