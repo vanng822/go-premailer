@@ -521,3 +521,43 @@ func TestRetainsComments(t *testing.T) {
 
 	assert.Contains(t, resultHTML, `<!-- Comment containing brackets < > -->`)
 }
+
+func TestPremailerText(t *testing.T) {
+	html := []byte(`<html>
+        <head>
+        <title>Title</title>
+        <style type="text/css">
+        h1 {
+        	width: 50px;
+        	color:red;
+        }
+        h2 {
+        	vertical-align: top;
+        }
+        h3 {
+		    text-align: right;
+		}
+        strong {
+        	text-decoration:none
+        }
+        div {
+        	background-color: green
+        }
+        </style>
+        </head>
+        <body>
+        <h1>Hi!</h1>
+        <h2>There</h2>
+        <h3>Hello</h3>
+        <p><strong>Yes!</strong></p>
+        <div>Green color</div>
+        </body>
+        </html>`)
+
+	p, err := NewPremailerFromBytes(html, nil)
+	assert.Nil(t, err)
+	resultText, err := p.TransformText()
+	assert.Nil(t, err)
+
+	assert.Contains(t, resultText, "***\nHi!\n***\n\n-----\nThere\n-----\n\nHello\n-----\n\n*Yes!*\n\nGreen color")
+}
