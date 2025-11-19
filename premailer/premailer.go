@@ -57,9 +57,6 @@ func NewPremailer(doc *goquery.Document, options *Options) Premailer {
 	if options == nil {
 		options = NewOptions()
 	}
-	if options.Html2TextOptions == nil {
-		options.Html2TextOptions = &html2text.Options{PrettyTables: true}
-	}
 	pr.options = options
 	return &pr
 }
