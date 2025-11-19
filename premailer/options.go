@@ -23,7 +23,9 @@ type Options struct {
 	// If true, then no escaping will be done for text nodes
 	// This could be open for XSS attacks if the content is not sanitized
 	UnescapedTextNode bool
-	Html2TextOptions  *html2text.Options
+	// Options for html2text conversion
+	// Default is &html2text.Options{PrettyTables: true}
+	Html2TextOptions *html2text.Options
 }
 
 // NewOptions return an Options instance with default value
