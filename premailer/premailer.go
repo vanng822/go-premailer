@@ -24,8 +24,8 @@ type Premailer interface {
 	Transform() (string, error)
 }
 
-var unmergableSelector = regexp.MustCompile("(?i)\\:{1,2}(visited|active|hover|focus|link|root|in-range|invalid|valid|after|before|selection|target|first\\-(line|letter))|^\\@")
-var notSupportedSelector = regexp.MustCompile("(?i)\\:(checked|disabled|enabled|lang)")
+var unmergableSelector = regexp.MustCompile(`(?i)\:{1,2}(visited|active|hover|focus|link|root|in-range|invalid|valid|after|before|selection|target|first\-(line|letter))|^\@`)
+var notSupportedSelector = regexp.MustCompile(`(?i)\:(checked|disabled|enabled|lang)`)
 
 type premailer struct {
 	doc       *goquery.Document
@@ -187,6 +187,15 @@ func (pr *premailer) addLeftover() {
 	}
 }
 
+func (pr *premailer) makeUnsafeRawTextNode() {
+	if !pr.options.UnescapedTextNode {
+		return
+	}
+	if len(pr.doc.Nodes) > 0 {
+		makeUnsafeTextNode(pr.doc.Nodes[0])
+	}
+}
+
 // Transform process and inlining css
 // It start to collect the rules in the document style tags
 // Calculate specificity and sort the rules based on that
@@ -200,6 +209,7 @@ func (pr *premailer) Transform() (string, error) {
 		pr.collectElements()
 		pr.applyInline()
 		pr.addLeftover()
+		pr.makeUnsafeRawTextNode()
 		pr.processed = true
 	}
 	return pr.doc.Html()
