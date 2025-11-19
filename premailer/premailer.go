@@ -9,6 +9,7 @@ import (
 	"sync"
 
 	"github.com/PuerkitoBio/goquery"
+	"github.com/jaytaylor/html2text"
 	"github.com/vanng822/css"
 	"golang.org/x/net/html"
 )
@@ -22,6 +23,10 @@ type Premailer interface {
 	// And applies the rules on those
 	// The leftover rules will put back into a style element
 	Transform() (string, error)
+	// TransformText process and inlining css then convert to text
+	// It first call Transform to get the processed html
+	// Then convert the html to text
+	TransformText() (string, error)
 }
 
 var unmergableSelector = regexp.MustCompile("(?i)\\:{1,2}(visited|active|hover|focus|link|root|in-range|invalid|valid|after|before|selection|target|first\\-(line|letter))|^\\@")
@@ -51,6 +56,9 @@ func NewPremailer(doc *goquery.Document, options *Options) Premailer {
 	pr.elIdAttr = "pr-el-id"
 	if options == nil {
 		options = NewOptions()
+	}
+	if options.Html2TextOptions == nil {
+		options.Html2TextOptions = &html2text.Options{PrettyTables: true}
 	}
 	pr.options = options
 	return &pr
@@ -203,4 +211,16 @@ func (pr *premailer) Transform() (string, error) {
 		pr.processed = true
 	}
 	return pr.doc.Html()
+}
+
+func (pr *premailer) TransformText() (string, error) {
+	htmlStr, err := pr.Transform()
+	if err != nil {
+		return "", err
+	}
+	text, err := html2text.FromString(htmlStr, html2text.Options{PrettyTables: true})
+	if err != nil {
+		return "", err
+	}
+	return text, nil
 }
