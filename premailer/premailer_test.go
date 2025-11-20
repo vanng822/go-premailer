@@ -550,7 +550,20 @@ func TestPremailerText(t *testing.T) {
         <h2>There</h2>
         <h3>Hello</h3>
         <p><strong>Yes!</strong></p>
-        <div>Green color</div>
+        <div><a href="https://example.com">Green color</a></div>
+
+		<table>
+		<thead>
+			<tr><th>Header 1</th><th>Header 2</th></tr>
+		</thead>
+		<tfoot>
+			<tr><td>Footer 1</td><td>Footer 2</td></tr>
+		</tfoot>
+		<tbody>
+			<tr><td>Row 1 Col 1</td><td>Row 1 Col 2</td></tr>
+			<tr><td>Row 2 Col 1</td><td>Row 2 Col 2</td></tr>
+		</tbody>
+		</table>
         </body>
         </html>`)
 
@@ -559,5 +572,28 @@ func TestPremailerText(t *testing.T) {
 	resultText, err := p.TransformText()
 	assert.Nil(t, err)
 
-	assert.Contains(t, resultText, "***\nHi!\n***\n\n-----\nThere\n-----\n\nHello\n-----\n\n*Yes!*\n\nGreen color")
+	assert.Contains(t, resultText, `***
+Hi!
+***
+
+-----
+There
+-----
+
+Hello
+-----
+
+*Yes!*
+
+Green color ( https://example.com )
+
++-------------+-------------+
+|  HEADER 1   |  HEADER 2   |
++-------------+-------------+
+| Row 1 Col 1 | Row 1 Col 2 |
+| Row 2 Col 1 | Row 2 Col 2 |
++-------------+-------------+
+|  FOOTER 1   |  FOOTER 2   |
++-------------+-------------+`)
+
 }
