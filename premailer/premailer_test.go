@@ -521,3 +521,79 @@ func TestRetainsComments(t *testing.T) {
 
 	assert.Contains(t, resultHTML, `<!-- Comment containing brackets < > -->`)
 }
+
+func TestPremailerText(t *testing.T) {
+	html := []byte(`<html>
+        <head>
+        <title>Title</title>
+        <style type="text/css">
+        h1 {
+        	width: 50px;
+        	color:red;
+        }
+        h2 {
+        	vertical-align: top;
+        }
+        h3 {
+		    text-align: right;
+		}
+        strong {
+        	text-decoration:none
+        }
+        div {
+        	background-color: green
+        }
+        </style>
+        </head>
+        <body>
+        <h1>Hi!</h1>
+        <h2>There</h2>
+        <h3>Hello</h3>
+        <p><strong>Yes!</strong></p>
+        <div><a href="https://example.com">Green color</a></div>
+
+		<table>
+		<thead>
+			<tr><th>Header 1</th><th>Header 2</th></tr>
+		</thead>
+		<tfoot>
+			<tr><td>Footer 1</td><td>Footer 2</td></tr>
+		</tfoot>
+		<tbody>
+			<tr><td>Row 1 Col 1</td><td>Row 1 Col 2</td></tr>
+			<tr><td>Row 2 Col 1</td><td>Row 2 Col 2</td></tr>
+		</tbody>
+		</table>
+        </body>
+        </html>`)
+
+	p, err := NewPremailerFromBytes(html, nil)
+	assert.Nil(t, err)
+	resultText, err := p.TransformText()
+	assert.Nil(t, err)
+
+	assert.Contains(t, resultText, `***
+Hi!
+***
+
+-----
+There
+-----
+
+Hello
+-----
+
+*Yes!*
+
+Green color ( https://example.com )
+
++-------------+-------------+
+|  HEADER 1   |  HEADER 2   |
++-------------+-------------+
+| Row 1 Col 1 | Row 1 Col 2 |
+| Row 2 Col 1 | Row 2 Col 2 |
++-------------+-------------+
+|  FOOTER 1   |  FOOTER 2   |
++-------------+-------------+`)
+
+}
