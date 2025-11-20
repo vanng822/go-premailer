@@ -16,11 +16,6 @@ type Options struct {
 	// gives
 	//		<p style="width: 100% !important">Text</p>
 	KeepBangImportant bool
-
-	// If false then text nodes will be escaped for those characters &'<>\"\r
-	// If true, then no escaping will be done for text nodes
-	// This could be open for XSS attacks if the content is not sanitized
-	UnescapedTextNode bool
 }
 
 // NewOptions return an Options instance with default value
@@ -28,6 +23,5 @@ func NewOptions() *Options {
 	options := &Options{}
 	options.CssToAttributes = true
 	options.KeepBangImportant = false
-	options.UnescapedTextNode = false
 	return options
 }
