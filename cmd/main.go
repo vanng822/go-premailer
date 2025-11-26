@@ -16,9 +16,11 @@ func main() {
 		outputFile          string
 		removeClasses       bool
 		skipCssToAttributes bool
+		text                bool
 	)
 	flag.StringVar(&inputFile, "i", "", "Input file")
 	flag.StringVar(&outputFile, "o", "", "Output file")
+	flag.BoolVar(&text, "text", false, "Output only text")
 	flag.BoolVar(&removeClasses, "remove-classes", false, "Remove class attribute")
 	flag.BoolVar(&skipCssToAttributes, "skip-css-to-attributes", false, "No copy of css property to html attribute")
 	flag.Parse()
@@ -35,18 +37,33 @@ func main() {
 		log.Fatal(err)
 	}
 	html, err := prem.Transform()
-	log.Printf("took: %v", time.Now().Sub(start))
 	if err != nil {
 		log.Fatal(err)
 	}
+	txt, err := prem.TransformText()
+	if err != nil {
+		log.Fatal(err)
+	}
+	log.Printf("took: %v", time.Since(start))
 	if outputFile != "" {
 		fd, err := os.Create(outputFile)
 		if err != nil {
 			log.Fatal(err)
 		}
 		defer fd.Close()
-		fd.WriteString(html)
+		if text {
+			_, err = fd.WriteString(txt)
+		} else {
+			_, err = fd.WriteString(html)
+		}
+		if err != nil {
+			log.Fatal(err)
+		}
 	} else {
-		fmt.Println(html)
+		if text {
+			fmt.Println(txt)
+		} else {
+			fmt.Println(html)
+		}
 	}
 }
