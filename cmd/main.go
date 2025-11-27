@@ -59,11 +59,13 @@ func main() {
 		if err != nil {
 			log.Fatal(err)
 		}
-	} else {
-		if text {
-			fmt.Println(txt)
-		} else {
-			fmt.Println(html)
-		}
+		return
 	}
+
+	if text {
+		fmt.Println(txt)
+	} else {
+		fmt.Println(html)
+	}
+
 }
