@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"time"
 
 	"github.com/vanng822/go-premailer/premailer"
 )
@@ -28,7 +27,6 @@ func main() {
 		flag.Usage()
 		return
 	}
-	start := time.Now()
 	options := premailer.NewOptions()
 	options.RemoveClasses = removeClasses
 	options.CssToAttributes = !skipCssToAttributes
@@ -44,7 +42,6 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	log.Printf("took: %v", time.Since(start))
 	if outputFile != "" {
 		fd, err := os.Create(outputFile)
 		if err != nil {
