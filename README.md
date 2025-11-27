@@ -30,6 +30,13 @@ Inline styling for HTML mail in golang
 		}
 
 		fmt.Println(html)
+
+		txt, err := prem.TransformText()
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		fmt.Println(txt)
 	}
 
 ## Input
@@ -64,5 +71,6 @@ Inline styling for HTML mail in golang
 
 # Commandline
 
-	> go run main.go -i your_email.html
-	> go run main.go -i your_mail.html -o process_mail.html
+	> go run cmd/main.go -i your_email.html
+	> go run cmd/main.go -i your_mail.html -o process_mail.html
+	> go run cmd/main.go -i premailer/data/markup_test.html --text
