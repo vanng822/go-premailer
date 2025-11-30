@@ -9,7 +9,7 @@ import (
 	"sync"
 
 	"github.com/PuerkitoBio/goquery"
-	"github.com/jaytaylor/html2text"
+	"github.com/inbucket/html2text"
 	"github.com/vanng822/css"
 	"golang.org/x/net/html"
 )
