@@ -79,7 +79,7 @@ func TestDataPremailerIgnore(t *testing.T) {
 	assert.Contains(t, resultHTML, "<p><strong>Yes!</strong></p>")
 }
 
-func TestWithInline(t *testing.T) {
+func TestWidthInline(t *testing.T) {
 	html := `<html>
         <head>
         <title>Title</title>
