@@ -15,6 +15,8 @@ import (
 )
 
 // Premailer is the inteface of Premailer
+// The inline html document is cached so multiple calls to TransformText or Transform
+// will not re-process the html again
 type Premailer interface {
 	// Transform process and inlining css
 	// It start to collect the rules in the document style tags
@@ -26,6 +28,7 @@ type Premailer interface {
 	// TransformText process and inlining css then convert to text
 	// It first call Transform to get the processed html
 	// Then convert the html to text
+	// It accept Html2TextOption to control the conversion
 	TransformText(...Html2TextOption) (string, error)
 }
 
@@ -33,15 +36,15 @@ var unmergableSelector = regexp.MustCompile(`(?i)\:{1,2}(visited|active|hover|fo
 var notSupportedSelector = regexp.MustCompile(`(?i)\:(checked|disabled|enabled|lang)`)
 
 type premailer struct {
-	doc       *goquery.Document
-	elIdAttr  string
-	elements  map[string]*elementRules
-	rules     []*styleRule
-	leftover  []*css.CSSRule
-	allRules  [][]*css.CSSRule
-	elementId int
-	processed bool
-	options   *Options
+	doc         *goquery.Document
+	elIdAttr    string
+	elements    map[string]*elementRules
+	rules       []*styleRule
+	leftover    []*css.CSSRule
+	allRules    [][]*css.CSSRule
+	elementId   int
+	processOnce sync.Once
+	options     *Options
 }
 
 // NewPremailer return a new instance of Premailer
@@ -199,14 +202,13 @@ func (pr *premailer) addLeftover() {
 // And applies the rules on those
 // The leftover rules will put back into a style element
 func (pr *premailer) Transform() (string, error) {
-	if !pr.processed {
+	pr.processOnce.Do(func() {
 		pr.collectRules()
 		pr.sortRules()
 		pr.collectElements()
 		pr.applyInline()
 		pr.addLeftover()
-		pr.processed = true
-	}
+	})
 	return pr.doc.Html()
 }
 

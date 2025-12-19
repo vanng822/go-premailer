@@ -109,7 +109,7 @@ func TestWidthInline(t *testing.T) {
 	assert.NotContains(t, resultHTML, "<style type=\"text/css\">")
 }
 
-func TestWithZeroLength(t *testing.T) {
+func TestWidthZeroLength(t *testing.T) {
 	html := `<html>
         <head>
         <title>Title</title>
