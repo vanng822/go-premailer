@@ -43,8 +43,7 @@ func WithKeepBangImportant(keep bool) PremailerOption {
 // NewOptions return an Options instance with default value
 func NewOptions(o ...PremailerOption) *Options {
 	options := &Options{
-		CssToAttributes:   true,
-		KeepBangImportant: false,
+		CssToAttributes: true,
 	}
 
 	for _, opt := range o {
