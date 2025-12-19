@@ -113,21 +113,14 @@ func (pr *premailer) sortRules() {
 }
 
 func (pr *premailer) collectRules() {
-	var wg sync.WaitGroup
 	pr.doc.Find("style:not([data-premailer='ignore'])").Each(func(_ int, s *goquery.Selection) {
 		if media, exist := s.Attr("media"); exist && media != "all" {
 			return
 		}
-		wg.Add(1)
-		pr.allRules = append(pr.allRules, nil)
-		go func(ruleSetIndex int, selection *goquery.Selection) {
-			defer wg.Done()
-			ss := css.Parse(selection.Text())
-			pr.allRules[ruleSetIndex] = ss.GetCSSRuleList()
-			selection.ReplaceWithHtml("")
-		}(len(pr.allRules)-1, s)
+		ss := css.Parse(s.Text())
+		pr.allRules = append(pr.allRules, ss.GetCSSRuleList())
+		s.ReplaceWithHtml("")
 	})
-	wg.Wait()
 
 }
 
