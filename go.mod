@@ -1,15 +1,13 @@
 module github.com/vanng822/go-premailer
 
-go 1.24.3
-
-toolchain go1.24.10
+go 1.25.0
 
 require (
 	github.com/PuerkitoBio/goquery v1.11.0
 	github.com/inbucket/html2text v1.0.0
 	github.com/stretchr/testify v1.11.1
 	github.com/vanng822/css v1.0.1
-	golang.org/x/net v0.50.0
+	golang.org/x/net v0.51.0
 )
 
 require (
