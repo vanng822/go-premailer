@@ -3,7 +3,7 @@ module github.com/vanng822/go-premailer
 go 1.25.0
 
 require (
-	github.com/PuerkitoBio/goquery v1.11.0
+	github.com/PuerkitoBio/goquery v1.12.0
 	github.com/inbucket/html2text v1.0.0
 	github.com/stretchr/testify v1.11.1
 	github.com/vanng822/css v1.0.1
