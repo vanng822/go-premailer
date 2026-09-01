@@ -7,7 +7,7 @@ require (
 	github.com/inbucket/html2text v1.0.0
 	github.com/stretchr/testify v1.11.1
 	github.com/vanng822/css v1.0.1
-	golang.org/x/net v0.57.0
+	golang.org/x/net v0.58.0
 )
 
 require (
