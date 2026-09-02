@@ -3,7 +3,7 @@ module github.com/vanng822/go-premailer
 go 1.25.0
 
 require (
-	github.com/PuerkitoBio/goquery v1.12.0
+	github.com/PuerkitoBio/goquery v1.13.0
 	github.com/inbucket/html2text v1.0.0
 	github.com/stretchr/testify v1.12.1
 	github.com/vanng822/css v1.0.1
@@ -11,7 +11,7 @@ require (
 )
 
 require (
-	github.com/andybalholm/cascadia v1.3.3 // indirect
+	github.com/andybalholm/cascadia v1.3.4 // indirect
 	github.com/clipperhouse/uax29/v2 v2.2.0 // indirect
 	github.com/fatih/color v1.18.0 // indirect
 	github.com/gorilla/css v1.0.1 // indirect
